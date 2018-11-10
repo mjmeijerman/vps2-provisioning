@@ -1,0 +1,39 @@
+{% if item.item is defined %}
+    {% set item = item.item %}
+{% endif %}
+
+{% set combined_headers = (nginx_http_headers_default | combine(nginx_http_headers) | combine(item.headers | default({}))) %}
+
+server {
+    listen      80;
+    server_name {{ item.domains | join(' ') }};
+
+    root       {{ item.web_root }};
+    access_log {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}access.log;
+    error_log  {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}error.log;
+
+    {% for key, value in combined_headers.items() if not key == 'Strict-Transport-Security' -%}
+        add_header  {{ key }} "{{ value }}"  always;
+    {% endfor %}
+
+    location / {
+        try_files $uri /{{ item.index|default('app.php') }}$is_args$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass  unix:/var/run/php/php{{ php7_version }}-fpm.sock;
+        fastcgi_index {{ item.index|default('app.php') }};
+        include       fastcgi_params;
+        fastcgi_param DOCUMENT_ROOT   $realpath_root;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        {% for key, value in (item.fastcgi_params | default({})).items() -%}
+            fastcgi_param {{ key }} {{ value }};
+        {% endfor %}
+    }
+
+    location /.well-known/acme-challenge {
+        root {{ nginx_www_dir }};
+        log_not_found off;
+        try_files $uri =404;
+    }
+}

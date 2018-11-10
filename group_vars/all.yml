@@ -1,0 +1,51 @@
+---
+
+# PHP7
+
+php7_ini_directives_fpm:
+  upload_max_filesize: "8M"
+  post_max_size: "8M"
+
+php7_version: 7.2
+php7_enable_fpm: yes
+
+php7_versioned_extensions:
+  - zip
+  - intl
+  - curl
+  - mysql
+  - gd
+  - xml
+  - mbstring
+
+php7_fpm_pool_enabled: yes
+php7_fpm_pool_name: www
+php7_fpm_pool_listen: "/run/php/php{{ php7_version }}-fpm.sock"
+php7_fpm_pool_listen_mode: "0660"
+php7_fpm_pool_pm: static
+php7_fpm_pool_status_path: /status
+php7_fpm_pool_pm_max_children: 128
+php7_fpm_pool_pm_max_requests: 512
+php7_fpm_pool_catch_workers_output: yes
+
+# MYSQL
+
+mariadb_datadir:                 "/var/lib/mysql"
+mariadb_max_allowed_packet:      "64M"
+mariadb_innodb_buffer_pool_size: 592M
+
+
+# NGINX
+nginx_dhparam_bits: 256
+nginx_http_headers:
+  Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+
+# Certbot
+certbot_create_method: webroot
+certbot_create_command: "{{ certbot_script }} certonly --webroot --webroot-path {{ nginx_www_dir }} --noninteractive --agree-tos --email {{ certbot_admin_email }} -d {{ item.item.domains | join(',') }}"
+certbot_create_if_missing: yes
+certbot_auto_renew_hour: 1
+certbot_auto_renew_minute: 13
+certbot_admin_email: markmeijerman@gmail.com
+certbot_auto_renew: no  # we use our own task
+certbot_auto_renew_options: "--quiet --no-self-upgrade --deploy-hook 'sudo service nginx reload'"

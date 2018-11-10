@@ -1,0 +1,10 @@
+---
+
+- name: Remove PHP session cleaning cronjob
+  file:
+    path: /etc/cron.d/php
+    state: absent
+
+- name: Import production/staging tasks
+  import_tasks: "production.yml"
+  when: "'production'"

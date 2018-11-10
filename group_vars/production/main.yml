@@ -1,0 +1,74 @@
+---
+
+deploy_user: deploy
+project_root: /home/{{ deploy_user }}
+bashrc_users:
+  - "provision"
+
+ssh_provision_user: "provision"
+
+# NGINX
+nginx_user:         www-data
+nginx_group:        www-data
+server_templates:   "{{ nginx_server_templates_donar_team_cup_test + nginx_server_templates_haagse_donar_cup_test + nginx_server_templates_herstelkamer_test }}"
+
+nginx_http_params:
+  client_max_body_size: "8M"
+
+# UFW
+
+ufw_rules_to_create:
+  - to_port: 22 # ssh
+    rule: allow
+  - to_port: 80 # Nginx
+    rule: allow
+  - to_port: 443 # Nginx
+    rule: allow
+
+# PHP7
+
+php7_ini_directives_global:
+  disable_functions:      "exec, passthru, system, popen, curl_multi_exec"
+  allow_url_fopen:        1
+  session.save_path:      "/var/lib/php{{ php7_version }}/sessions"
+  session.cookie_secure:  1
+  session.gc_probability: 1
+  session.gc_divisor:     1000
+  session.gc_maxlifetime: 3600
+  always_populate_raw_post_data: "-1"
+
+  opcache_fast_shutdown: 0
+  opcache_interned_strings_buffer: 16
+  opcache_max_accelerated_files: 10240
+  opcache_memory_consumption: 128
+  opcache_revalidate_freq: 0
+  opcache_validate_timestamps: 0
+
+  error_log: syslog
+
+php7_ini_directives_fpm:
+  upload_max_filesize: "8M"
+  post_max_size: "8M"
+
+php7_fpm_pool_enabled: yes
+php7_fpm_pool_name: www
+php7_fpm_pool_user: www-data
+php7_fpm_pool_group: www-data
+php7_fpm_pool_listen: "/run/php/php{{ php7_version }}-fpm.sock"
+php7_fpm_pool_listen_mode: "0660"
+php7_fpm_pool_pm: static
+php7_fpm_pool_status_path: /status
+php7_fpm_pool_pm_max_children: 128
+php7_fpm_pool_pm_max_requests: 512
+php7_fpm_pool_catch_workers_output: yes
+
+php7_extensions:
+  - memcached
+
+# MYSQL
+
+mariadb_bind_address:          "127.0.0.1"
+mariadb_root_password:         ~ # Placed in secure.yml
+
+mariadb_databases: "{{ mariadb_databases_donar_team_cup + mariadb_databases_donar_team_cup_test + mariadb_databases_haagse_donar_cup + mariadb_databases_haagse_donar_cup_test + mariadb_databases_herstelkamer + mariadb_databases_herstelkamer_test }}"
+mariadb_users: "{{ mariadb_users_donar_team_cup + mariadb_users_donar_team_cup_test + mariadb_users_haagse_donar_cup + mariadb_users_haagse_donar_cup_test + mariadb_users_herstelkamer + mariadb_users_herstelkamer_test }}"

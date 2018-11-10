@@ -1,0 +1,49 @@
+server {
+    listen      80;
+    server_name {{ item.domains | join(' ') }};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    location /.well-known/acme-challenge {
+        root {{ nginx_www_dir }};
+        log_not_found off;
+        try_files $uri =404;
+    }
+}
+
+server {
+    listen 443 ssl;
+
+    ssl                     on;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ item.domains | first }}/privkey.pem;
+    ssl_certificate         /etc/letsencrypt/live/{{ item.domains | first }}/fullchain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ item.domains | first }}/chain.pem;
+    ssl_prefer_server_ciphers on;
+
+    server_name {{ item.domains | join(' ') }};
+
+    root       {{ item.web_root }};
+    access_log {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}access.log;
+    error_log  {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}error.log;
+
+    {% for key, value in (nginx_http_headers_default | combine(nginx_http_headers) | combine(item.headers | default({}))).items() -%}
+        add_header  {{ key }} "{{ value }}"  always;
+    {% endfor %}
+
+    location / {
+        try_files $uri /{{ item.index|default('app.php') }}$is_args$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass  unix:/var/run/php/php{{ php7_version }}-fpm.sock;
+        fastcgi_index {{ item.index|default('app.php') }};
+        include       fastcgi_params;
+        fastcgi_param DOCUMENT_ROOT   $realpath_root;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        {% for key, value in (item.fastcgi_params | default({})).items() -%}
+            fastcgi_param {{ key }} {{ value }};
+        {% endfor %}
+    }
+}

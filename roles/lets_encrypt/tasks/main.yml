@@ -1,0 +1,74 @@
+---
+
+- name: Check for absent certificates
+  stat:
+    path: /etc/letsencrypt/live/{{ item.domains | first }}/cert.pem
+  with_items: "{{ server_templates }}"
+  register: webserver_letsencrypt
+
+- name: Write http config for domains without certificate
+  template:
+    src: "{{ inventory_dir }}/roles/webserver/templates/http.conf.j2"
+    dest: "/etc/nginx/sites-available/{{ item.item.name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ webserver_letsencrypt.results }}"
+  register: webserver_http_config_write
+  when: "webserver_letsencrypt is defined and not item.stat.exists"
+
+- name: Activate domains without certificate
+  file:
+    src: "/etc/nginx/sites-available/{{ item.item.name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.item.name }}.conf"
+    state: link
+  with_items: "{{ webserver_letsencrypt.results }}"
+  register: webserver_http_config_activate
+  when: "webserver_letsencrypt is defined and not item.stat.exists"
+
+- name: Set permissions on .well-known folder
+  file: "dest={{ nginx_www_dir }}/.well-known owner={{ deploy_user }} group={{ deploy_user }} mode=u=rwX,g=rX,o=rX recurse=yes"
+  when: webserver_http_config_write is changed or webserver_http_config_activate is changed
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  when: webserver_http_config_write is changed or webserver_http_config_activate is changed
+
+- name: Create certificates
+  shell: "{{ certbot_create_command }}"
+  with_items: "{{ webserver_letsencrypt.results }}"
+  when: "webserver_letsencrypt is defined and not item.stat.exists"
+
+- name: Write https configs
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/nginx/sites-available/{{ item.name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ server_templates }}"
+  register: webserver_https_config_write
+
+- name: Activate domains
+  file:
+    src: "/etc/nginx/sites-available/{{ item.name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ item.name }}.conf"
+    state: link
+  with_items: "{{ server_templates }}"
+  register: webserver_https_config_activate
+
+- name: Add cron job for certbot renewal
+  cron:
+    name: Certbot automatic renewal.
+    job: "sudo {{ certbot_script }} renew {{ certbot_auto_renew_options }}"
+    minute: "{{ certbot_auto_renew_minute }}"
+    hour: "{{ certbot_auto_renew_hour }}"
+    user: "{{ certbot_auto_renew_user }}"
+
+- name: Reload nginx
+  service:
+    name: nginx
+    state: reloaded
+  when: webserver_https_config_write is changed or webserver_https_config_activate is changed

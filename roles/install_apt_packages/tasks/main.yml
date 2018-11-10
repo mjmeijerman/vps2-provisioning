@@ -1,0 +1,6 @@
+---
+
+- name: Install apt packages
+  apt:
+    name: ['acl', 'git', 'unzip']
+    state: present

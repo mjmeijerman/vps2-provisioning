@@ -1,0 +1,23 @@
+---
+- name: Provision vps2.markmeijerman.nl
+  hosts: production
+  remote_user: "{{ ssh_provision_user }}"
+  become: yes
+
+  roles:
+    - f500.debian
+    - install_apt_packages
+    - f500.ntp
+    - f500.bashrc
+    - HanXHX.mysql
+    - f500.nginx
+    - f500.locale
+    - f500.ufw
+    - f500.ufw_rules
+    - f500.memcached
+    - f500.php7
+    - f500.php_composer
+    - f500.vim
+    - webserver
+    - geerlingguy.certbot
+    - lets_encrypt

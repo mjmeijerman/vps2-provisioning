@@ -1,0 +1,19 @@
+---
+
+- name: Add github.com to known_hosts file
+  lineinfile: dest=/etc/ssh/ssh_known_hosts line="{{ lookup('pipe', 'ssh-keyscan github.com') }}" state=present  create=yes mode=0644
+
+- name: Create deploy user
+  user: name={{ deploy_user }} groups=www-data shell=/bin/bash state=present password=$6$rounds=100000$Ma2q.iH0Aj6l3SAp$oYVMw4G0AOoCTiLEews.B7DEYAtg39JQg8y2dUx8zVsL22/rVK6KatHvUGrl/PYZUIghg1ic9/TkB7loCTznO1
+
+- name: Add personal authorized key to deploy user
+  authorized_key: user={{ deploy_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Add deploy user SSH key
+  copy: content="{{ deploy_user_private_key }}" dest=/home/{{ deploy_user }}/.ssh/id_rsa owner={{ deploy_user }} group={{ deploy_user }} mode=0600
+
+- name: Add deploy user SSH public_key
+  copy: content="{{ deploy_user_public_key }}" dest=/home/{{ deploy_user }}/.ssh/id_rsa.pub owner={{ deploy_user }} group={{ deploy_user }} mode=0600
+
+- name: write sudoers for user
+  template: src={{ inventory_dir }}/roles/webserver/templates/sudoers.j2 dest=/etc/sudoers.d/{{ deploy_user }} validate='visudo -cf %s'
