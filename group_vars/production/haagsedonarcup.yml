@@ -1,7 +1,7 @@
 ---
 
-nginx_server_templates_haagse_donar_cup:
-  - name: haagse_donar_cup
+nginx_server_templates_haagsedonarcup:
+  - name: haagsedonarcup
     src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
     index: app.php
     web_root: "{{ project_root}}/haagsedonarcup.nl/current/web"
@@ -11,16 +11,16 @@ nginx_server_templates_haagse_donar_cup:
         - "haagsedonarcup.nl"
         - "www.haagsedonarcup.nl"
 
-haagse_donar_cup_db_user:     ~ # Placed in secure.yml
-haagse_donar_cup_db_password: ~ # Placed in secure.yml
+haagsedonarcup_db_user:     ~ # Placed in secure.yml
+haagsedonarcup_db_password: ~ # Placed in secure.yml
 
-mariadb_databases_haagse_donar_cup:
+mariadb_databases_haagsedonarcup:
   - haagsedonarcup
 
-mariadb_users_haagse_donar_cup:
+mariadb_users_haagsedonarcup:
   - {
-    name:     "{{ haagse_donar_cup_db_user }}",
-    password: "{{ haagse_donar_cup_db_password }}",
+    name:     "{{ haagsedonarcup_db_user }}",
+    password: "{{ haagsedonarcup_db_password }}",
     priv:     "haagsedonarcup.*:ALL",
     host:     "%"
   }

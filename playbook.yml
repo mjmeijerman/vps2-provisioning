@@ -1,6 +1,6 @@
 ---
 - name: Provision vps2.markmeijerman.nl
-  hosts: production
+  hosts: all
   remote_user: "{{ ssh_provision_user }}"
   become: yes
 
@@ -18,6 +18,38 @@
     - f500.php7
     - f500.php_composer
     - f500.vim
+
+- name: Import roles per project for develop
+  hosts: "develop"
+  remote_user: "{{ ssh_provision_user }}"
+  become: yes
+
+  roles:
+      - geerlingguy.mailhog
+
+- name: Import roles per project for develop
+  hosts: "develop"
+  remote_user: "{{ ssh_provision_user }}"
+  become: no
+
+  tasks:
+    - name: Use role in loop voor develop
+      include_role:
+        name: '{{ item }}'
+      loop: '{{ synced_projects }}'
+
+- name: Production roles
+  hosts: "production"
+  remote_user: "{{ ssh_provision_user }}"
+  become: yes
+
+  roles:
     - webserver
     - geerlingguy.certbot
     - lets_encrypt
+
+  tasks:
+    - name: Import roles per project for production
+      include_role:
+        name: "{{ item }}"
+      loop: "{{ lookup('pipe', 'ls -1 ' + inventory_dir + '/roles-per-project').split('\n') }}"

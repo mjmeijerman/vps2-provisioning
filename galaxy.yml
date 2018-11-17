@@ -14,3 +14,4 @@
 
 - src: HanXHX.mysql
 - src: geerlingguy.certbot
+- src: geerlingguy.mailhog

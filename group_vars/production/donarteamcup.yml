@@ -1,7 +1,7 @@
 ---
 
-nginx_server_templates_donar_team_cup:
-  - name: donar_team_cup
+nginx_server_templates_donarteamcup:
+  - name: donarteamcup
     src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
     index: app.php
     web_root: "{{ project_root}}/donarteamcup.nl/current/web"
@@ -11,16 +11,16 @@ nginx_server_templates_donar_team_cup:
         - "donarteamcup.nl"
         - "www.donarteamcup.nl"
 
-donar_team_cup_db_user:     ~ # Placed in secure.yml
-donar_team_cup_db_password: ~ # Placed in secure.yml
+donarteamcup_db_user:     ~ # Placed in secure.yml
+donarteamcup_db_password: ~ # Placed in secure.yml
 
-mariadb_databases_donar_team_cup:
+mariadb_databases_donarteamcup:
   - donarteamcup
 
-mariadb_users_donar_team_cup:
+mariadb_users_donarteamcup:
   - {
-    name:     "{{ donar_team_cup_db_user }}",
-    password: "{{ donar_team_cup_db_password }}",
+    name:     "{{ donarteamcup_db_user }}",
+    password: "{{ donarteamcup_db_password }}",
     priv:     "donarteamcup.*:ALL",
     host:     "%"
   }

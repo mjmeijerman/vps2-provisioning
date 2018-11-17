@@ -1,0 +1,25 @@
+nginx_server_templates_herstelkamer:
+  - name: herstelkamer
+    src: "{{ inventory_dir }}/roles-per-project/webserver/templates/http.conf.j2"
+    ssl: off
+    index: app_dev.php
+    web_root: "{{ project_root}}/herstelkamer/web"
+    domains:
+      - "herstelkamer.loc"
+      - "www.herstelkamer.loc"
+    headers:
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://maxcdn.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com data:"
+
+herstelkamer_db_user:     'herstelkamer'
+herstelkamer_db_password: 'herstelkamer'
+
+mariadb_databases_herstelkamer:
+  - 'herstelkamer'
+
+mariadb_users_herstelkamer:
+  - {
+    name:     "{{ herstelkamer_db_user }}",
+    password: "{{ herstelkamer_db_password }}",
+    priv:     "herstelkamer.*:ALL",
+    host:     "%"
+  }

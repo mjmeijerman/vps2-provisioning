@@ -1,0 +1,25 @@
+nginx_server_templates_haagsedonarcup:
+  - name: haagsedonarcup
+    src: "{{ inventory_dir }}/roles-per-project/webserver/templates/http.conf.j2"
+    ssl: off
+    index: app_dev.php
+    web_root: "{{ project_root}}/haagsedonarcup/web"
+    domains:
+      - "haagsedonarcup.loc"
+      - "www.haagsedonarcup.loc"
+    headers:
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://maxcdn.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com data:"
+
+haagsedonarcup_db_user:     'haagsedonarcup'
+haagsedonarcup_db_password: 'haagsedonarcup'
+
+mariadb_databases_haagsedonarcup:
+  - 'haagsedonarcup'
+
+mariadb_users_haagsedonarcup:
+  - {
+    name:     "{{ haagsedonarcup_db_user }}",
+    password: "{{ haagsedonarcup_db_password }}",
+    priv:     "haagsedonarcup.*:ALL",
+    host:     "%"
+  }

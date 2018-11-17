@@ -36,9 +36,17 @@ mariadb_innodb_buffer_pool_size: 592M
 
 
 # NGINX
+nginx_www_dir: "/var/www"
 nginx_dhparam_bits: 256
 nginx_http_headers:
   Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+nginx_http_headers_default:
+  Content-Security-Policy: "default-src 'self'; form-action 'self'; frame-ancestors 'none'"
+  Referrer-Policy: "no-referrer, strict-origin-when-cross-origin"
+  Strict-Transport-Security: max-age=15768000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-Xss-Protection: "1; mode=block"
 
 # Certbot
 certbot_create_method: webroot

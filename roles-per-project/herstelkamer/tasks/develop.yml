@@ -1,0 +1,25 @@
+---
+
+- name: Create sessions dev dir
+  file: path=/dev/shm/herstelkamer/var/sessions/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Create cache dev dir
+  file: path=/dev/shm/herstelkamer/var/cache/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Create logs dir
+  file: path=/dev/shm/herstelkamer/var/logs/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Copy the parameters distfile
+  command: cp /vagrant/herstelkamer/app/config/parameters.yml.dist /vagrant/herstelkamer/app/config/parameters.yml creates=/vagrant/herstelkamer/app/config/parameters.yml
+
+- name: Composer install
+  command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant/herstelkamer
+
+- name: Install assets
+  command: bin/console assets:install web --symlink chdir=/vagrant/herstelkamer
+
+- name: Doctrine migrations
+  command: bin/console doctrine:migrations:migrate --no-interaction chdir=/vagrant/herstelkamer
