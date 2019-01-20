@@ -1,0 +1,25 @@
+nginx_server_templates_jurymarktplaats:
+  - name: jurymarktplaats
+    src: "{{ inventory_dir }}/roles/webserver/templates/http.conf.j2"
+    ssl: off
+    index: index.php
+    web_root: "{{ project_root}}/jurymarktplaats/public"
+    domains:
+      - "jurymarktplaats.loc"
+      - "www.jurymarktplaats.loc"
+    headers:
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://maxcdn.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com data:"
+
+jurymarktplaats_db_user:     'jurymarktplaats'
+jurymarktplaats_db_password: 'jurymarktplaats'
+
+mariadb_databases_jurymarktplaats:
+  - 'jurymarktplaats'
+
+mariadb_users_jurymarktplaats:
+  - {
+    name:     "{{ jurymarktplaats_db_user }}",
+    password: "{{ jurymarktplaats_db_password }}",
+    priv:     "jurymarktplaats.*:ALL",
+    host:     "%"
+  }

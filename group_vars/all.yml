@@ -56,4 +56,4 @@ certbot_auto_renew_hour: 1
 certbot_auto_renew_minute: 13
 certbot_admin_email: markmeijerman@gmail.com
 certbot_auto_renew: no  # we use our own task
-certbot_auto_renew_options: "--quiet --no-self-upgrade --deploy-hook 'sudo service nginx reload'"
+certbot_auto_renew_options: "--quiet --no-self-upgrade --renew-hook 'sudo service nginx reload'"

@@ -18,11 +18,13 @@ $synced_projects = [
     "herstelkamer",
     "donargym",
     "donarteamcup",
+    "jurymarktplaats",
 ]
 
 $synced_folders = {
-    "/vagrant/haagsedonarcup" => "/Users/mark/Sites/haagsedonarcup",
-    "/vagrant/herstelkamer"   => "/Users/mark/Sites/herstelkamer.nl",
-    "/vagrant/donargym"       => "/Users/mark/Sites/donargym",
-    "/vagrant/donarteamcup"   => "/Users/mark/Sites/donarteamcup"
+    "/vagrant/haagsedonarcup"  => "/Users/mark/Sites/haagsedonarcup",
+    "/vagrant/herstelkamer"    => "/Users/mark/Sites/herstelkamer.nl",
+    "/vagrant/donargym"        => "/Users/mark/Sites/donargym",
+    "/vagrant/donarteamcup"    => "/Users/mark/Sites/donarteamcup",
+    "/vagrant/jurymarktplaats" => "/Users/mark/Sites/jurymarktplaats",
 }

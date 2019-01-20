@@ -10,7 +10,7 @@ ssh_provision_user: "provision"
 # NGINX
 nginx_user:         www-data
 nginx_group:        www-data
-server_templates:   "{{ nginx_server_templates_donarteamcup + nginx_server_templates_donarteamcup_test + nginx_server_templates_haagsedonarcup + nginx_server_templates_haagsedonarcup_test + nginx_server_templates_herstelkamer + nginx_server_templates_herstelkamer_test }}"
+server_templates:   "{{ nginx_server_templates_jurysysteem_site + nginx_server_templates_donarteamcup + nginx_server_templates_donarteamcup_test + nginx_server_templates_haagsedonarcup + nginx_server_templates_haagsedonarcup_test + nginx_server_templates_herstelkamer + nginx_server_templates_herstelkamer_test }}"
 
 nginx_http_params:
   client_max_body_size: "8M"

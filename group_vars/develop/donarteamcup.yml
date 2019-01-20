@@ -1,6 +1,6 @@
 nginx_server_templates_donarteamcup:
   - name: donarteamcup
-    src: "{{ inventory_dir }}/roles-per-project/webserver/templates/http.conf.j2"
+    src: "{{ inventory_dir }}/roles/webserver/templates/http.conf.j2"
     ssl: off
     index: app_dev.php
     web_root: "{{ project_root}}/donarteamcup/web"

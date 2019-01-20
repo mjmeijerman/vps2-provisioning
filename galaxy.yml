@@ -11,6 +11,7 @@
 - src: f500.ufw
 - src: f500.ufw_rules
 - src: f500.vim
+- src: oefenweb.yarn
 
 - src: HanXHX.mysql
 - src: geerlingguy.certbot

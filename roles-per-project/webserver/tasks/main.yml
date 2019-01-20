@@ -1,5 +1,0 @@
----
-
-- name: Import production/staging tasks
-  import_tasks: "production.yml"
-  when: "'production' in group_names or 'staging' in group_names"
