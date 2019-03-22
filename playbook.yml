@@ -13,7 +13,6 @@
     - f500.nginx
     - f500.locale
     - f500.ufw
-    - f500.ufw_rules
     - f500.memcached
     - f500.php7
     - f500.php_composer

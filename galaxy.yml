@@ -9,7 +9,6 @@
 - src: f500.php_composer
 - src: f500.memcached
 - src: f500.ufw
-- src: f500.ufw_rules
 - src: f500.vim
 - src: oefenweb.yarn
 

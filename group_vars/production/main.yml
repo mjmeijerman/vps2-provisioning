@@ -16,7 +16,8 @@ nginx_http_params:
   client_max_body_size: "8M"
 
 # UFW
-
+ufw_default_policy:
+  - { direction: "incoming", policy: "deny" }
 ufw_rules_to_create:
   - to_port: 22 # ssh
     rule: allow
