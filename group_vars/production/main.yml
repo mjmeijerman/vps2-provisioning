@@ -10,7 +10,7 @@ ssh_provision_user: "provision"
 # NGINX
 nginx_user:         www-data
 nginx_group:        www-data
-server_templates:   "{{ nginx_server_templates_jurysysteem_site + nginx_server_templates_donarteamcup + nginx_server_templates_donarteamcup_test + nginx_server_templates_haagsedonarcup + nginx_server_templates_haagsedonarcup_test + nginx_server_templates_herstelkamer + nginx_server_templates_herstelkamer_test }}"
+server_templates:   "{{ nginx_server_templates_jurysysteem_ow + nginx_server_templates_jurysysteem_ow_test + nginx_server_templates_jurysysteem_site + nginx_server_templates_donarteamcup + nginx_server_templates_donarteamcup_test + nginx_server_templates_haagsedonarcup + nginx_server_templates_haagsedonarcup_test + nginx_server_templates_herstelkamer + nginx_server_templates_herstelkamer_test }}"
 
 nginx_http_params:
   client_max_body_size: "8M"
@@ -71,5 +71,5 @@ php7_extensions:
 mariadb_bind_address:          "127.0.0.1"
 mariadb_root_password:         ~ # Placed in secure.yml
 
-mariadb_databases: "{{ mariadb_databases_donarteamcup + mariadb_databases_donarteamcup_test + mariadb_databases_haagsedonarcup + mariadb_databases_haagsedonarcup_test + mariadb_databases_herstelkamer + mariadb_databases_herstelkamer_test }}"
-mariadb_users: "{{ mariadb_users_donarteamcup + mariadb_users_donarteamcup_test + mariadb_users_haagsedonarcup + mariadb_users_haagsedonarcup_test + mariadb_users_herstelkamer + mariadb_users_herstelkamer_test }}"
+mariadb_databases: "{{ mariadb_databases_jurysysteem_ow_test + mariadb_databases_jurysysteem_ow + mariadb_databases_donarteamcup + mariadb_databases_donarteamcup_test + mariadb_databases_haagsedonarcup + mariadb_databases_haagsedonarcup_test + mariadb_databases_herstelkamer + mariadb_databases_herstelkamer_test }}"
+mariadb_users: "{{ mariadb_users_jurysysteem_ow_test + mariadb_users_jurysysteem_ow + mariadb_users_donarteamcup + mariadb_users_donarteamcup_test + mariadb_users_haagsedonarcup + mariadb_users_haagsedonarcup_test + mariadb_users_herstelkamer + mariadb_users_herstelkamer_test }}"

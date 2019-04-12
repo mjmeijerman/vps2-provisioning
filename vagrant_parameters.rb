@@ -18,6 +18,7 @@ $synced_projects = [
     "herstelkamer",
     "donargym",
     "donarteamcup",
+    "jurysysteem",
 ]
 
 $synced_folders = {
@@ -25,4 +26,5 @@ $synced_folders = {
     "/vagrant/herstelkamer"    => "/Users/mark/Sites/herstelkamer.nl",
     "/vagrant/donargym"        => "/Users/mark/Sites/donargym",
     "/vagrant/donarteamcup"    => "/Users/mark/Sites/donarteamcup",
+    "/vagrant/jurysysteem"     => "/Users/mark/Sites/jurysysteem",
 }

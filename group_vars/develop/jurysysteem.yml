@@ -1,0 +1,25 @@
+nginx_server_templates_jurysysteem:
+  - name: jurysysteem
+    src: "{{ inventory_dir }}/roles/webserver/templates/http.conf.j2"
+    ssl: off
+    index: app_dev.php
+    web_root: "{{ project_root}}/jurysysteem/web"
+    domains:
+      - "jurysysteem.loc"
+      - "www.jurysysteem.loc"
+    headers:
+      Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com https://maxcdn.bootstrapcdn.com; style-src 'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com data:"
+
+jurysysteem_db_user:     'jurysysteem'
+jurysysteem_db_password: 'jurysysteem'
+
+mariadb_databases_jurysysteem:
+  - 'jurysysteem'
+
+mariadb_users_jurysysteem:
+  - {
+    name:     "{{ jurysysteem_db_user }}",
+    password: "{{ jurysysteem_db_password }}",
+    priv:     "jurysysteem.*:ALL",
+    host:     "%"
+  }

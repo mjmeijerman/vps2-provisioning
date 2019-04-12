@@ -1,0 +1,25 @@
+---
+
+- name: Create sessions dev dir
+  file: path=/dev/shm/jurysysteem/var/sessions/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Create cache dev dir
+  file: path=/dev/shm/jurysysteem/var/cache/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Create logs dir
+  file: path=/dev/shm/jurysysteem/var/logs/ recurse=yes group=vagrant owner=vagrant state=directory
+  become: yes
+
+- name: Copy the parameters distfile
+  command: cp /vagrant/jurysysteem/app/config/parameters.yml.dist /vagrant/jurysysteem/app/config/parameters.yml creates=/vagrant/jurysysteem/app/config/parameters.yml
+
+- name: Composer install
+  command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant/jurysysteem
+
+- name: Install assets
+  command: php app/console assets:install web --symlink chdir=/vagrant/jurysysteem
+
+- name: Doctrine migrations
+  command: app/console doctrine:migrations:migrate --no-interaction chdir=/vagrant/jurysysteem

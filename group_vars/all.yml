@@ -30,10 +30,17 @@ php7_fpm_pool_catch_workers_output: yes
 
 # MYSQL
 
-mariadb_datadir:                 "/var/lib/mysql"
+mariadb_config_template: "{{ inventory_dir }}/roles/webserver/templates/my.cnf.j2"
 mariadb_max_allowed_packet:      "64M"
 mariadb_innodb_buffer_pool_size: 592M
-
+mariadb_charset: utf8mb4
+mariadb_collation: utf8mb4_unicode_520_ci
+mariadb_key_buffer_size: 32M
+mariadb_query_cache_size: 0
+mariadb_innodb_log_file_size: 128M
+mariadb_wait_timeout: 600
+mariadb_slow_query_log_enabled: false
+mariadb_long_query_time: 2
 
 # NGINX
 nginx_www_dir: "/var/www"

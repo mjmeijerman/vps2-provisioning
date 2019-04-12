@@ -1,0 +1,25 @@
+---
+
+nginx_server_templates_jurysysteem_ow_test:
+  - name: jurysysteem_ow_test
+    src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
+    index: app.php
+    web_root: "{{ project_root}}/ow-test.jurysysteem.nl/current/web"
+    headers:
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+    domains:
+        - "ow-test.jurysysteem.nl"
+
+jurysysteem_ow_test_db_user:     ~ # Placed in secure.yml
+jurysysteem_ow_test_db_password: ~ # Placed in secure.yml
+
+mariadb_databases_jurysysteem_ow_test:
+  - jurysysteem_ow_test
+
+mariadb_users_jurysysteem_ow_test:
+  - {
+    name:     "{{ jurysysteem_ow_test_db_user }}",
+    password: "{{ jurysysteem_ow_test_db_password }}",
+    priv:     "jurysysteem_ow_test.*:ALL",
+    host:     "%"
+  }
