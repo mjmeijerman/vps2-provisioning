@@ -1,0 +1,25 @@
+---
+
+nginx_server_templates_jurysysteem_hdc_test:
+  - name: jurysysteem_hdc_test
+    src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
+    index: app.php
+    web_root: "{{ project_root}}/hdc-test.jurysysteem.nl/current/web"
+    headers:
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+    domains:
+        - "hdc-test.jurysysteem.nl"
+
+jurysysteem_hdc_test_db_user:     ~ # Placed in secure.yml
+jurysysteem_hdc_test_db_password: ~ # Placed in secure.yml
+
+mariadb_databases_jurysysteem_hdc_test:
+  - jurysysteem_hdc_test
+
+mariadb_users_jurysysteem_hdc_test:
+  - {
+    name:     "{{ jurysysteem_hdc_test_db_user }}",
+    password: "{{ jurysysteem_hdc_test_db_password }}",
+    priv:     "jurysysteem_hdc_test.*:ALL",
+    host:     "%"
+  }
