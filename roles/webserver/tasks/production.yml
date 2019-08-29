@@ -17,10 +17,3 @@
 
 - name: write sudoers for user
   template: src={{ inventory_dir }}/roles/webserver/templates/sudoers.j2 dest=/etc/sudoers.d/{{ deploy_user }} validate='visudo -cf %s'
-
-- name: Add cron job for nginx reload
-  cron:
-    name: Reload nginx.
-    job: "sudo service nginx reload"
-    minute: "17"
-    hour: "02"

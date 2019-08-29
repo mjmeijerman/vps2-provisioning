@@ -59,13 +59,13 @@
   with_items: "{{ server_templates }}"
   register: webserver_https_config_activate
 
-- name: Add cron job for certbot renewal
-  cron:
-    name: Certbot automatic renewal.
-    job: "sudo {{ certbot_script }} renew {{ certbot_auto_renew_options }}"
-    minute: "{{ certbot_auto_renew_minute }}"
-    hour: "{{ certbot_auto_renew_hour }}"
-    user: "{{ certbot_auto_renew_user }}"
+- name: add nginx reload renew hook
+  template:
+    src: "{{ inventory_dir }}/roles/lets_encrypt/templates/01-reload-nginx.j2"
+    dest: "/etc/letsencrypt/renewal-hooks/deploy/01-reload-nginx"
+    owner: root
+    group: root
+    mode: 0744
 
 - name: Reload nginx
   service:

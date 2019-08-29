@@ -14,7 +14,7 @@ nginx_http_params:
   sendfile: off # fixes issue to reload javascript files after changes
 nginx_user: vagrant
 nginx_group: vagrant
-nginx_server_templates: "{{ nginx_server_templates_jurysysteem + nginx_server_templates_donarteamcup + nginx_server_templates_donargym + nginx_server_templates_haagsedonarcup + nginx_server_templates_herstelkamer }}"
+nginx_server_templates: "{{ nginx_server_templates_jurysysteem + nginx_server_templates_donarteamcup + nginx_server_templates_donargym + nginx_server_templates_haagsedonarcup + nginx_server_templates_herstelkamer + nginx_server_templates_thog }}"
 nginx_www_dir: "/var/www"
 
 # UFW
@@ -63,5 +63,5 @@ php7_extensions:
 mariadb_bind_address:  "127.0.0.1"
 mariadb_root_password: "root"
 
-mariadb_databases: "{{ mariadb_databases_jurysysteem + mariadb_databases_donarteamcup + mariadb_databases_donargym + mariadb_databases_haagsedonarcup + mariadb_databases_herstelkamer }}"
-mariadb_users: "{{ mariadb_users_jurysysteem + mariadb_users_donarteamcup + mariadb_users_donargym + mariadb_users_haagsedonarcup + mariadb_users_herstelkamer }}"
+mariadb_databases: "{{ mariadb_databases_jurysysteem + mariadb_databases_donarteamcup + mariadb_databases_donargym + mariadb_databases_haagsedonarcup + mariadb_databases_herstelkamer + mariadb_databases_thog }}"
+mariadb_users: "{{ mariadb_users_jurysysteem + mariadb_users_donarteamcup + mariadb_users_donargym + mariadb_users_haagsedonarcup + mariadb_users_herstelkamer + mariadb_users_thog }}"

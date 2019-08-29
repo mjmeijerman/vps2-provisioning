@@ -59,8 +59,5 @@ nginx_http_headers_default:
 certbot_create_method: webroot
 certbot_create_command: "{{ certbot_script }} certonly --webroot --webroot-path {{ nginx_www_dir }} --noninteractive --agree-tos --email {{ certbot_admin_email }} -d {{ item.item.domains | join(',') }}"
 certbot_create_if_missing: yes
-certbot_auto_renew_hour: 1
-certbot_auto_renew_minute: 13
 certbot_admin_email: markmeijerman@gmail.com
 certbot_auto_renew: no  # we use our own task
-certbot_auto_renew_options: "--quiet --no-self-upgrade --renew-hook 'sudo service nginx reload'"
