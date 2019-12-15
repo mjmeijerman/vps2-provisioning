@@ -19,4 +19,4 @@
   command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant/thog
 
 - name: Install assets
-  command: php app/console assets:install web --symlink chdir=/vagrant/thog
+  command: php bin/console assets:install web --symlink chdir=/vagrant/thog

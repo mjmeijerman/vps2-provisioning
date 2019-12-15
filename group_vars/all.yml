@@ -6,7 +6,7 @@ php7_ini_directives_fpm:
   upload_max_filesize: "8M"
   post_max_size: "8M"
 
-php7_version: 7.2
+php7_version: 7.4
 php7_enable_fpm: yes
 
 php7_versioned_extensions:

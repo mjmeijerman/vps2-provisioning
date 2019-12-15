@@ -1,0 +1,25 @@
+---
+
+nginx_server_templates_jurysysteem_bta:
+  - name: jurysysteem_bta
+    src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
+    index: app.php
+    web_root: "{{ project_root}}/bta.jurysysteem.nl/current/web"
+    headers:
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+    domains:
+        - "bta.jurysysteem.nl"
+
+jurysysteem_bta_db_user:     ~ # Placed in secure.yml
+jurysysteem_bta_db_password: ~ # Placed in secure.yml
+
+mariadb_databases_jurysysteem_bta:
+  - jurysysteem_bta
+
+mariadb_users_jurysysteem_bta:
+  - {
+    name:     "{{ jurysysteem_bta_db_user }}",
+    password: "{{ jurysysteem_bta_db_password }}",
+    priv:     "jurysysteem_bta.*:ALL",
+    host:     "%"
+  }
