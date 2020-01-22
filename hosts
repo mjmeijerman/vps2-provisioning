@@ -3,3 +3,6 @@ vps2.markmeijerman.nl ansible_ssh_port=22 ansible_ssh_user=provision
 
 [develop]
 vps2.markmeijerman.loc
+
+[local_server]
+192.168.178.10 ansible_ssh_port=22 ansible_ssh_user=provision

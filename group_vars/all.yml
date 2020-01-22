@@ -41,6 +41,7 @@ mariadb_innodb_log_file_size: 128M
 mariadb_wait_timeout: 600
 mariadb_slow_query_log_enabled: false
 mariadb_long_query_time: 2
+mariadb_version: '10.4'
 
 # NGINX
 nginx_www_dir: "/var/www"
