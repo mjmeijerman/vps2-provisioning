@@ -18,5 +18,8 @@
 - name: Composer install
   command: composer install --no-interaction --prefer-source --no-scripts --working-dir=/vagrant/thog
 
+- name: run migrations
+  command: bin/console doctrine:migrations:migrate --no-interaction --working-dir=/vagrant/thog
+
 - name: Install assets
   command: php bin/console assets:install web --symlink chdir=/vagrant/thog
