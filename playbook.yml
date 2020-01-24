@@ -19,7 +19,7 @@
     - f500.vim
 
 - name: Import roles per project for develop
-  hosts: "develop"
+  hosts: develop
   remote_user: "{{ ssh_provision_user }}"
   become: yes
 
@@ -27,7 +27,7 @@
       - geerlingguy.mailhog
 
 - name: Import roles per project for develop
-  hosts: "develop"
+  hosts: develop
   remote_user: "{{ ssh_provision_user }}"
   become: no
 
@@ -37,15 +37,27 @@
         name: '{{ item }}'
       loop: '{{ synced_projects }}'
 
-- name: Production roles
-  hosts: "production"
+- name: Production+local roles
+  hosts: production,local_server
   remote_user: "{{ ssh_provision_user }}"
   become: yes
 
   roles:
     - webserver
+
+- name: Production roles
+  hosts: production
+  remote_user: "{{ ssh_provision_user }}"
+  become: yes
+
+  roles:
     - geerlingguy.certbot
     - lets_encrypt
+
+- name: Production+local tasks
+  hosts: production,local_server
+  remote_user: "{{ ssh_provision_user }}"
+  become: yes
 
   tasks:
     - name: Import roles per project for production
