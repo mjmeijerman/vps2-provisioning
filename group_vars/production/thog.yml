@@ -6,7 +6,7 @@ nginx_server_templates_thog:
     index: app.php
     web_root: "{{ project_root}}/thog.nl/current/web"
     headers:
-        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+      Content-Security-Policy: "default-src 'self'; script-src code.jquery.com cdn.jsdelivr.net 'self' 'unsafe-inline'; style-src cdn.jsdelivr.net 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
     domains:
         - "thog.nl"
         - "www.thog.nl"
