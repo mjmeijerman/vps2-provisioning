@@ -8,7 +8,7 @@ nginx_server_templates_thog:
       - "thog.loc"
       - "www.thog.loc"
     headers:
-      Content-Security-Policy: "default-src 'self'; script-src code.jquery.com cdn.jsdelivr.net 'self' 'unsafe-inline'; style-src cdn.jsdelivr.net 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
+      Content-Security-Policy: "default-src https://www.google-analytics.com 'self'; script-src https://www.google-analytics.com https://ssl.google-analytics.com https://www.googletagmanager.com code.jquery.com cdn.jsdelivr.net 'self' 'unsafe-inline'; style-src cdn.jsdelivr.net 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
 
 thog_db_user:     'thog'
 thog_db_password: 'thog'
