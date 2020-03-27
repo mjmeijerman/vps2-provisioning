@@ -13,5 +13,6 @@
 - src: oefenweb.yarn
 
 - src: HanXHX.mysql
+  version: 1.1.0
 - src: geerlingguy.certbot
 - src: geerlingguy.mailhog
