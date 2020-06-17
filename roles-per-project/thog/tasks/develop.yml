@@ -22,4 +22,4 @@
   command: bin/console assets:install web --symlink chdir=/vagrant/thog
 
 - name: Doctrine migrations
-  command: bin/console doctrine:migrations:migrate --no-interaction chdir=/vagrant/thog
+  command: bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration chdir=/vagrant/thog

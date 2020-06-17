@@ -22,4 +22,4 @@
   command: php bin/console assets:install web --symlink chdir=/vagrant/donarteamcup
 
 - name: Doctrine migrations
-  command: bin/console doctrine:migrations:migrate --no-interaction chdir=/vagrant/donarteamcup
+  command: bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration chdir=/vagrant/donarteamcup
