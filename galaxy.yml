@@ -3,7 +3,6 @@
 - src: f500.debian
 - src: f500.bashrc
 - src: f500.locale
-- src: f500.ntp
 - src: f500.nginx
 - src: f500.php7
 - src: f500.php_composer

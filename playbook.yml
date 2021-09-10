@@ -7,7 +7,6 @@
   roles:
     - f500.debian
     - install_apt_packages
-    - f500.ntp
     - f500.bashrc
     - HanXHX.mysql
     - f500.nginx
