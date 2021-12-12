@@ -1,0 +1,126 @@
+---
+
+- name: Validate version value
+  fail:
+    msg: "The value of php8_version must >= 8.0 and < 9.0"
+  when: not (php8_version >= 8.0 and php8_version < 9.0)
+
+- name: Install packages needed to use the deb.sury.org repository
+  apt:
+    name: ['apt-transport-https', 'ca-certificates']
+    state: present
+
+- name: Add the deb.sury.org trusted key
+  apt_key:
+    id: 95BD4743
+    url: https://packages.sury.org/php/apt.gpg
+
+- name: Add the deb.sury.org repository
+  apt_repository:
+    repo: "deb https://packages.sury.org/php/ {{ ansible_distribution_release }} main"
+    update_cache: yes
+
+- name: Install PHP CLI
+  apt:
+    name: "php{{ php8_version }}-cli"
+
+- name: Configure PHP for CLI
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{ php8_version }}/cli/conf.d/99-customization.ini"
+  vars:
+    php8_ini_directives: "{{ php8_ini_directives_default | combine(php8_ini_directives_global) | combine(php8_ini_directives_cli) }}"
+
+- name: Install PHP module development files
+  apt:
+    name: "php{{ php8_version }}-dev"
+  when: php8_enable_dev | bool
+
+- name: Install PHP Apache2 module
+  apt:
+    name: "libapache2-mod-php{{ php8_version }}"
+  when: php8_enable_apache | bool
+
+- name: Configure PHP for Apache2
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{ php8_version }}/apache2/conf.d/99-customization.ini"
+  vars:
+    php8_ini_directives: "{{ php8_ini_directives_default | combine(php8_ini_directives_global) | combine(php8_ini_directives_apache) }}"
+  notify: Restart Apache
+  when: php8_enable_apache | bool
+
+- name: Install PHP CGI binary
+  apt:
+    name: "php{{ php8_version }}-cgi"
+  when: php8_enable_cgi | bool
+
+- name: Configure PHP for CGI
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{ php8_version }}/cgi/conf.d/99-customization.ini"
+  vars:
+    php8_ini_directives: "{{ php8_ini_directives_default | combine(php8_ini_directives_global) | combine(php8_ini_directives_cgi) }}"
+  when: php8_enable_cgi | bool
+
+- name: Install PHP FPM binary
+  apt:
+    name: "php{{ php8_version }}-fpm"
+  when: php8_enable_fpm | bool
+
+- name: Configure PHP for FPM
+  template:
+    src: php.ini.j2
+    dest: "/etc/php/{{ php8_version }}/fpm/conf.d/99-customization.ini"
+  vars:
+    php8_ini_directives: "{{ php8_ini_directives_default | combine(php8_ini_directives_global) | combine(php8_ini_directives_fpm) }}"
+  notify: Restart PHP FPM
+  when: php8_enable_fpm | bool
+
+- name: Configure FPM
+  template:
+    src: php-fpm.conf.j2
+    dest: "/etc/php/{{ php8_version }}/fpm/php-fpm.conf"
+  notify: Restart PHP FPM
+  when: php8_enable_fpm | bool
+
+- name: Ensure "chdir" in the standard pool exists
+  file:
+    path: "{{ php8_fpm_pool_chdir }}"
+    state: directory
+  when: php8_enable_fpm | bool and php8_fpm_pool_enabled | bool
+
+- name: Configure the standard pool for FPM
+  template:
+    src: php-fpm-pool.conf.j2
+    dest: "/etc/php/{{ php8_version }}/fpm/pool.d/{{ php8_fpm_pool_name }}.conf"
+  notify: Restart PHP FPM
+  when: php8_enable_fpm | bool and php8_fpm_pool_enabled | bool
+
+- name: Remove the standard pool for FPM
+  file:
+    path: "/etc/php/{{ php8_version }}/fpm/pool.d/{{ php8_fpm_pool_name }}.conf"
+    state: absent
+  notify: Restart PHP FPM
+  when: php8_enable_fpm | bool and not php8_fpm_pool_enabled | bool
+
+- name: Enable the FPM service
+  service:
+    name: "php{{ php8_version }}-fpm"
+    enabled: yes
+  when: php8_enable_fpm | bool
+
+- name: Install PHP extensions
+  apt:
+    name: "{{ php8_extensions | map('prefix', 'php-') | list }}"
+    state: present
+  notify:
+    - Restart Apache
+    - Restart PHP FPM
+
+- name: Install versioned PHP extensions
+  apt:
+    name: "{{ php8_versioned_extensions | map('prefix', 'php' ~ php8_version ~ '-') | list }}"
+  notify:
+    - Restart Apache
+    - Restart PHP FPM

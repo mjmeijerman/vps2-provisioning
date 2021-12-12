@@ -12,8 +12,8 @@
   when: not php_composer_binary.stat.exists
 
 - name: Create the install script
-  copy:
-    src: composer-install.sh
+  template:
+    src: composer-install.sh.j2
     dest: /tmp/composer-install.sh
     mode: 0755
   when: not php_composer_binary.stat.exists

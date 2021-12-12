@@ -4,14 +4,14 @@
 - src: f500.bashrc
 - src: f500.locale
 - src: f500.nginx
-- src: f500.php7
+- src: f500.ansible_php8
 - src: f500.php_composer
 - src: f500.memcached
 - src: f500.ufw
 - src: f500.vim
-- src: oefenweb.yarn
-
+- src: f500.supervisord
 - src: HanXHX.mysql
-  version: 1.1.0
 - src: geerlingguy.certbot
 - src: geerlingguy.mailhog
+- src: geerlingguy.rabbitmq
+- src: rockandska.erlang

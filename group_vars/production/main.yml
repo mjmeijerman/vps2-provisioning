@@ -10,7 +10,7 @@ ssh_provision_user: "provision"
 # NGINX
 nginx_user:         www-data
 nginx_group:        www-data
-server_templates:   "{{ nginx_server_templates_jurysysteem_hdc + nginx_server_templates_jurysysteem_hdc_test + nginx_server_templates_jurysysteem_thog + nginx_server_templates_jurysysteem_thog_test + nginx_server_templates_jurysysteem_ow + nginx_server_templates_jurysysteem_ow_test + nginx_server_templates_jurysysteem_bta + nginx_server_templates_jurysysteem_bta_test + nginx_server_templates_jurysysteem_dtc + nginx_server_templates_jurysysteem_dtc_test + nginx_server_templates_jurysysteem_site + nginx_server_templates_donarteamcup + nginx_server_templates_donarteamcup_test + nginx_server_templates_haagsedonarcup + nginx_server_templates_haagsedonarcup_test + nginx_server_templates_herstelkamer + nginx_server_templates_herstelkamer_test + nginx_server_templates_thog + nginx_server_templates_thog_test }}"
+server_templates:   []
 
 nginx_http_params:
   client_max_body_size: "8M"
@@ -18,6 +18,7 @@ nginx_http_params:
 # UFW
 ufw_default_policy:
   - { direction: "incoming", policy: "deny" }
+
 ufw_rules_to_create:
   - to_port: 22 # ssh
     rule: allow
@@ -26,12 +27,12 @@ ufw_rules_to_create:
   - to_port: 443 # Nginx
     rule: allow
 
-# PHP7
+# PHP
 
-php7_ini_directives_global:
+php8_ini_directives_global:
   disable_functions:      "exec, passthru, system, popen, curl_multi_exec"
   allow_url_fopen:        1
-  session.save_path:      "/var/lib/php{{ php7_version }}/sessions"
+  session.save_path:      "/var/lib/php{{ php8_version }}/sessions"
   session.cookie_secure:  1
   session.gc_probability: 1
   session.gc_divisor:     1000
@@ -47,29 +48,54 @@ php7_ini_directives_global:
 
   error_log: syslog
 
-php7_ini_directives_fpm:
+php8_ini_directives_fpm:
   upload_max_filesize: "8M"
   post_max_size: "8M"
 
-php7_fpm_pool_enabled: yes
-php7_fpm_pool_name: www
-php7_fpm_pool_user: www-data
-php7_fpm_pool_group: www-data
-php7_fpm_pool_listen: "/run/php/php{{ php7_version }}-fpm.sock"
-php7_fpm_pool_listen_mode: "0660"
-php7_fpm_pool_pm: static
-php7_fpm_pool_status_path: /status
-php7_fpm_pool_pm_max_children: 128
-php7_fpm_pool_pm_max_requests: 512
-php7_fpm_pool_catch_workers_output: yes
+php8_fpm_pool_enabled: yes
+php8_fpm_pool_name: www
+php8_fpm_pool_user: www-data
+php8_fpm_pool_group: www-data
+php8_fpm_pool_listen: "/run/php/php{{ php8_version }}-fpm.sock"
+php8_fpm_pool_listen_mode: "0660"
+php8_fpm_pool_pm: static
+php8_fpm_pool_status_path: /status
+php8_fpm_pool_pm_max_children: 128
+php8_fpm_pool_pm_max_requests: 512
+php8_fpm_pool_catch_workers_output: yes
 
-php7_extensions:
+php8_extensions:
   - memcached
 
 # MYSQL
-
 mariadb_bind_address:          "127.0.0.1"
-mariadb_root_password:         ~
+mariadb_root_password:         ~ # Placed in secure.yml
 
-mariadb_databases: "{{ mariadb_databases_jurysysteem_hdc_test + mariadb_databases_jurysysteem_hdc + mariadb_databases_jurysysteem_thog_test + mariadb_databases_jurysysteem_thog + mariadb_databases_jurysysteem_ow_test + mariadb_databases_jurysysteem_ow + mariadb_databases_jurysysteem_bta + mariadb_databases_jurysysteem_bta_test + mariadb_databases_jurysysteem_dtc + mariadb_databases_jurysysteem_dtc_test + mariadb_databases_donarteamcup + mariadb_databases_donarteamcup_test + mariadb_databases_haagsedonarcup + mariadb_databases_haagsedonarcup_test + mariadb_databases_herstelkamer + mariadb_databases_herstelkamer_test + mariadb_databases_thog_test + mariadb_databases_thog }}"
-mariadb_users: "{{ mariadb_users_jurysysteem_hdc_test + mariadb_users_jurysysteem_hdc + mariadb_users_jurysysteem_thog_test + mariadb_users_jurysysteem_thog + mariadb_users_jurysysteem_ow_test + mariadb_users_jurysysteem_ow + mariadb_users_jurysysteem_bta_test + mariadb_users_jurysysteem_bta + mariadb_users_jurysysteem_dtc_test + mariadb_users_jurysysteem_dtc + mariadb_users_donarteamcup + mariadb_users_donarteamcup_test + mariadb_users_haagsedonarcup + mariadb_users_haagsedonarcup_test + mariadb_users_herstelkamer + mariadb_users_herstelkamer_test + mariadb_users_thog_test + mariadb_users_thog }}"
+mariadb_databases: []
+mariadb_users: []
+
+#supervisord_include_files:  "/etc/supervisor/conf.d/*.conf {{ project_root }}/zh-staging.jurysysteem.nl/shared/supervisor/*.conf {{ project_root }}/zh.jurysysteem.nl/shared/supervisor/*.conf"
+
+#rabbitmq
+rabbitmq_vhosts: []
+#  - zh-jurysysteem-staging
+#  - zh-jurysysteem-production
+
+rabbitmq_management_users: []
+#  - username: "zh-jurysysteem-staging"
+#    password: "{{ rabbitmq_zh_jurysysteem_staging_password }}"
+#    role: management
+#    permissions:
+#      - vhost: zh-jurysysteem-staging
+#        configure_priv: .*
+#        read_priv: .*
+#        write_priv: .*
+#  - username: "zh-jurysysteem-production"
+#    password: "{{ rabbitmq_zh_jurysysteem_production_password }}"
+#    role: management
+#    permissions:
+#      - vhost: zh-jurysysteem-production
+#        configure_priv: .*
+#        read_priv: .*
+#        write_priv: .*
+#

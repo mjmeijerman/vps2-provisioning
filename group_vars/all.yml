@@ -1,15 +1,19 @@
 ---
 
-# PHP7
+# DEBIAN
 
-php7_ini_directives_fpm:
+python_package: 'python3'
+
+# PHP
+
+php8_ini_directives_fpm:
   upload_max_filesize: "8M"
   post_max_size: "8M"
 
-php7_version: 7.2
-php7_enable_fpm: yes
+php8_version: 8.1
+php8_enable_fpm: yes
 
-php7_versioned_extensions:
+php8_versioned_extensions:
   - zip
   - intl
   - curl
@@ -17,19 +21,22 @@ php7_versioned_extensions:
   - gd
   - xml
   - mbstring
+  - amqp
+  - bcmath
 
-php7_fpm_pool_enabled: yes
-php7_fpm_pool_name: www
-php7_fpm_pool_listen: "/run/php/php{{ php7_version }}-fpm.sock"
-php7_fpm_pool_listen_mode: "0660"
-php7_fpm_pool_pm: static
-php7_fpm_pool_status_path: /status
-php7_fpm_pool_pm_max_children: 128
-php7_fpm_pool_pm_max_requests: 512
-php7_fpm_pool_catch_workers_output: yes
+php8_fpm_pool_enabled: yes
+php8_fpm_pool_name: www
+php8_fpm_pool_listen: "/run/php/php{{ php8_version }}-fpm.sock"
+php8_fpm_pool_listen_mode: "0660"
+php8_fpm_pool_pm: static
+php8_fpm_pool_status_path: /status
+php8_fpm_pool_pm_max_children: 128
+php8_fpm_pool_pm_max_requests: 512
+php8_fpm_pool_catch_workers_output: yes
 
 # MYSQL
 
+mariadb_version: '10.6'
 mariadb_config_template: "{{ inventory_dir }}/roles/webserver/templates/my.cnf.j2"
 mariadb_max_allowed_packet:      "64M"
 mariadb_innodb_buffer_pool_size: 592M
@@ -39,13 +46,25 @@ mariadb_key_buffer_size: 32M
 mariadb_query_cache_size: 0
 mariadb_innodb_log_file_size: 128M
 mariadb_wait_timeout: 600
-mariadb_slow_query_log_enabled: false
+mariadb_slow_query_log_enabled: true
 mariadb_long_query_time: 2
-mariadb_version: '10.4'
+
+mariadb_origin: upstream
+mariadb_vendor: mariadb
+
+mariadb_bind_address: "{{ global_db_ip }}"
+mariadb_port: 3306
+mariadb_socket: /var/run/mysqld/mysqld.sock
+
+mariadb_error_log: "/var/log/mysql/error.log"
+mariadb_slow_query_log: "/var/log/mysql/mysql_slow.log"
+
+bashrc_users:
+  - "provision"
 
 # NGINX
 nginx_www_dir: "/var/www"
-nginx_dhparam_bits: 256
+nginx_dhparam_bits: 4096
 nginx_http_headers:
   Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:"
 nginx_http_headers_default:
@@ -58,7 +77,16 @@ nginx_http_headers_default:
 
 # Certbot
 certbot_create_method: webroot
-certbot_create_command: "{{ certbot_script }} certonly --webroot --webroot-path {{ nginx_www_dir }} --noninteractive --agree-tos --email {{ certbot_admin_email }} -d {{ item.item.domains | join(',') }}"
 certbot_create_if_missing: yes
 certbot_admin_email: markmeijerman@gmail.com
 certbot_auto_renew: no  # we use our own task
+certbot_auto_renew_options: "--quiet --no-self-upgrade --renew-hook 'sudo service nginx reload'"
+certbot_create_command: "{{ certbot_script }} certonly --webroot --webroot-path {{ nginx_www_dir }} --noninteractive --agree-tos --email {{ certbot_admin_email }} -d {{ item.item.domains | join(',') }}"
+
+erlang_series: 24
+rabbitmq_version: "3.9.11"
+rabbitmq_deb: "rabbitmq-server_{{ rabbitmq_version }}-1_all.deb"
+rabbitmq_deb_url: "https://github.com/rabbitmq/rabbitmq-server/releases/download/v{{ rabbitmq_version }}/{{ rabbitmq_deb }}"
+
+supervisord_unix_http_server_socket_mode: "0660"
+supervisord_log_fatal_state_to_syslog: true

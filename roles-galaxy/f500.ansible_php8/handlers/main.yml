@@ -1,0 +1,13 @@
+---
+
+- name: Restart Apache
+  service:
+    name: apache2
+    state: restarted
+  when: php8_enable_apache | bool
+
+- name: Restart PHP FPM
+  service:
+    name: "php{{ php8_version }}-fpm"
+    state: restarted
+  when: php8_enable_fpm | bool

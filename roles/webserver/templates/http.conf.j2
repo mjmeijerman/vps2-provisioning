@@ -8,27 +8,53 @@ server {
     listen      80;
     server_name {{ item.domains | join(' ') }};
 
-    root       {{ item.web_root }};
-    access_log {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}access.log;
-    error_log  {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}error.log;
+    root  {{ item.web_root }};
+    index {{ item.index }};
+
+    access_log {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-access.log;
+    error_log  {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-error.log;
 
     {% for key, value in combined_headers.items() if not key == 'Strict-Transport-Security' -%}
         add_header  {{ key }} "{{ value }}"  always;
     {% endfor %}
 
+{% if item.rabbitmq_enabled|default(false) %}
+    location ~* /rabbitmq/api/(.*?)/(.*) {
+        {% if item.rabbitmq_whitelist_ip|default(false) -%}
+            {%- for ip in item.rabbitmq_whitelist_ip -%}
+                allow {{ ip }};
+            {% endfor -%}
+            deny all;
+        {% endif %}
+
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:" always;
+
+        proxy_pass http://127.0.0.1:15672/api/$1/$2?$query_string;
+    }
+
+    location ~* /rabbitmq/(.*) {
+        {% if item.rabbitmq_whitelist_ip|default(false) -%}
+            {%- for ip in item.rabbitmq_whitelist_ip -%}
+                allow {{ ip }};
+            {% endfor -%}
+            deny all;
+        {% endif %}
+
+        add_header Content-Security-Policy "default-src 'self'; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:" always;
+
+        rewrite ^/rabbitmq/(.*)$ /$1 break;
+        proxy_pass http://127.0.0.1:15672;
+    }
+{% endif %}
+
     location / {
-        try_files $uri /{{ item.index|default('app.php') }}$is_args$args;
+        try_files $uri /{{ item.index }}$is_args$args;
     }
 
     location ~ \.php$ {
-        fastcgi_pass  unix:/var/run/php/php{{ php7_version }}-fpm.sock;
-        fastcgi_index {{ item.index|default('app.php') }};
+        fastcgi_pass  unix:/var/run/php/php{{ php8_version }}-fpm.sock;
+        fastcgi_index {{ item.index }};
         include       fastcgi_params;
-        fastcgi_param DOCUMENT_ROOT   $realpath_root;
-        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
-        {% for key, value in (item.fastcgi_params | default({})).items() -%}
-            fastcgi_param {{ key }} {{ value }};
-        {% endfor %}
     }
 
     location /.well-known/acme-challenge {

@@ -4,8 +4,8 @@ Debian
 This role installs these packages:
 
 * curl
-* python-pycurl
-* python-configparser
+* python-pycurl/python3-pycurl
+* python-configparser/python3-configargparse
 
 It adds debian backports repos. 
 
@@ -14,14 +14,14 @@ It also runs apt-get update when it was run, last time, more than `{{ debian_cac
 Requirements
 ------------
 
-Debian Wheezy/Jessie/Stretch.
+Debian Wheezy/Jessie/Stretch/Buster/Bullseye.
 
 Role Variables
 --------------
 
     debian_cache_update: yes
     debian_cache_valid_time: 14400
-    debian_codename: '{{ ansible_distribution_release }}' ('wheezy', 'jessie', 'stretch')
+    debian_codename: '{{ ansible_distribution_release }}' ('wheezy', 'jessie', 'stretch', 'buster', 'bullseye')
     debian_codename: '{{ ansible_distribution_release }}'
 
 Be aware that `debian_codename` defaults on `{{ ansible_distribution_release }}` so, most of the chances, you don't need to specify it.

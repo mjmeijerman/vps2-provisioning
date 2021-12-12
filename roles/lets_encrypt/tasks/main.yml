@@ -14,8 +14,7 @@
     group: root
     mode: 0644
   with_items: "{{ webserver_letsencrypt.results }}"
-  register: webserver_http_config_write
-  when: "webserver_letsencrypt is defined and not item.stat.exists"
+  when: "webserver_letsencrypt is defined and not item.stat.exists and (item.item.type is not defined or item.item.type != 'redirect')"
 
 - name: Activate domains without certificate
   file:
@@ -23,18 +22,20 @@
     dest: "/etc/nginx/sites-enabled/{{ item.item.name }}.conf"
     state: link
   with_items: "{{ webserver_letsencrypt.results }}"
-  register: webserver_http_config_activate
   when: "webserver_letsencrypt is defined and not item.stat.exists"
-
-- name: Set permissions on .well-known folder
-  file: "dest={{ nginx_www_dir }}/.well-known owner={{ deploy_user }} group={{ deploy_user }} mode=u=rwX,g=rX,o=rX recurse=yes"
-  when: webserver_http_config_write is changed or webserver_http_config_activate is changed
+  register: webserver_http_config_activate
 
 - name: Reload nginx
   service:
     name: nginx
     state: reloaded
-  when: webserver_http_config_write is changed or webserver_http_config_activate is changed
+  when: webserver_http_config_activate is changed
+
+- name: Stop nginx
+  service:
+    name: nginx
+    state: stopped
+  when: "webserver_letsencrypt.msg is defined and webserver_letsencrypt.msg != 'All items completed'"
 
 - name: Create certificates
   shell: "{{ certbot_create_command }}"
@@ -59,6 +60,12 @@
   with_items: "{{ server_templates }}"
   register: webserver_https_config_activate
 
+- name: Start nginx
+  service:
+    name: nginx
+    state: started
+  when: "webserver_letsencrypt.msg is defined and webserver_letsencrypt.msg != 'All items completed'"
+
 - name: add nginx reload renew hook
   template:
     src: "{{ inventory_dir }}/roles/lets_encrypt/templates/01-reload-nginx.j2"
@@ -66,9 +73,3 @@
     owner: root
     group: root
     mode: 0744
-
-- name: Reload nginx
-  service:
-    name: nginx
-    state: reloaded
-  when: webserver_https_config_write is changed or webserver_https_config_activate is changed

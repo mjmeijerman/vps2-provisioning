@@ -1,0 +1,46 @@
+[global]
+
+pid = {{ php8_fpm_pid }}
+
+error_log = {{ php8_fpm_error_log }}
+log_level = {{ php8_fpm_log_level }}
+
+{% if php8_fpm_syslog_facility is not none %}
+syslog.facility = {{ php8_fpm_syslog_facility }}
+{% endif %}
+{% if php8_fpm_syslog_ident is not none %}
+syslog.ident = {{ php8_fpm_syslog_ident }}
+{% endif %}
+
+emergency_restart_threshold = {{ php8_fpm_emergency_restart_threshold }}
+emergency_restart_interval = {{ php8_fpm_emergency_restart_interval }}
+
+process_control_timeout = {{ php8_fpm_process_control_timeout }}
+
+{% if php8_fpm_process_max is not none %}
+process.max = {{ php8_fpm_process_max }}
+{% endif %}
+{% if php8_fpm_process_priority is not none %}
+process.priority = {{ php8_fpm_process_priority }}
+{% endif %}
+
+{% if php8_fpm_daemonize %}
+daemonize = yes
+{% else %}
+daemonize = no
+{% endif %}
+
+{% if php8_fpm_rlimit_files is not none %}
+rlimit_files = {{ php8_fpm_rlimit_files }}
+{% endif %}
+{% if php8_fpm_rlimit_core is not none %}
+rlimit_core = {{ php8_fpm_rlimit_core }}
+{% endif %}
+
+{% if php8_fpm_events_mechanism is not none %}
+events.mechanism = {{ php8_fpm_events_mechanism }}
+{% endif %}
+
+systemd_interval = {{ php8_fpm_systemd_interval }}
+
+include=/etc/php/{{ php8_version }}/fpm/pool.d/*.conf

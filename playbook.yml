@@ -1,5 +1,5 @@
 ---
-- name: Provision vps2.markmeijerman.nl
+- name: Provision vps1.markmeijerman.nl
   hosts: all
   remote_user: "{{ ssh_provision_user }}"
   become: yes
@@ -12,54 +12,34 @@
     - f500.nginx
     - f500.locale
     - f500.ufw
+    - f500.supervisord
     - f500.memcached
-    - f500.php7
+    - f500.ansible_php8
     - f500.php_composer
     - f500.vim
-
-- name: Import roles per project for develop
-  hosts: develop
-  remote_user: "{{ ssh_provision_user }}"
-  become: yes
-
-  roles:
-      - geerlingguy.mailhog
-
-- name: Import roles per project for develop
-  hosts: develop
-  remote_user: "{{ ssh_provision_user }}"
-  become: no
+    - f500.debian
+    - rockandska.erlang
+    - geerlingguy.rabbitmq
+    - rabbitmq-management
 
   tasks:
-    - name: Use role in loop voor develop
-      include_role:
-        name: '{{ item }}'
-      loop: '{{ synced_projects }}'
+    - name: write custom mariadb conf file
+      template:
+        src: my.cnf.j2
+        dest: /etc/mysql/mariadb.conf.d/90-my.cnf
 
-- name: Production+local roles
-  hosts: production,local_server
+    - name: "copy logrotate configuration"
+      copy:
+        src: "logrotate-nginx"
+        dest: "/etc/logrotate.d/nginx"
+        mode: "0644"
+
+- name: Production roles
+  hosts: "production"
   remote_user: "{{ ssh_provision_user }}"
   become: yes
 
   roles:
     - webserver
-
-- name: Production roles
-  hosts: production
-  remote_user: "{{ ssh_provision_user }}"
-  become: yes
-
-  roles:
     - geerlingguy.certbot
     - lets_encrypt
-
-- name: Production+local tasks
-  hosts: production,local_server
-  remote_user: "{{ ssh_provision_user }}"
-  become: yes
-
-  tasks:
-    - name: Import roles per project for production
-      include_role:
-        name: "{{ item }}"
-      loop: "{{ lookup('pipe', 'ls -1 ' + inventory_dir + '/roles-per-project').split('\n') }}"

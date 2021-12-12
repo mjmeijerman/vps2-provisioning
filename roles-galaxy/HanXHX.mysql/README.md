@@ -1,16 +1,17 @@
 MariaDB (MySQL) Ansible role for Debian
 =======================================
 
-[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-HanXHX.mysql-blue.svg)](https://galaxy.ansible.com/HanXHX/mysql) [![Build Status](https://travis-ci.org/HanXHX/ansible-mysql.svg?branch=master)](https://travis-ci.org/HanXHX/ansible-mysql)
+[![Ansible Galaxy](http://img.shields.io/badge/ansible--galaxy-HanXHX.mysql-blue.svg)](https://galaxy.ansible.com/HanXHX/mysql) [![Build Status](https://app.travis-ci.com/HanXHX/ansible-mysql.svg?branch=master)](https://app.travis-ci.com/HanXHX/ansible-mysql)
 
 Install and configure MariaDB (Galera Cluster). Manage replication (master/slave). Create users and databases.
 
 | OS              | Origin    | MariaDB versions          |
 | --------------- | --------- | ------------------------- |
-| Debian Stretch  | Debian    | 10.1                      |
-| Debian Stretch  | Upstream  | 10.1 / 10.2 / 10.3 / 10.4 |
 | Debian Buster   | Debian    | 10.3                      |
-| Debian Buster   | Upstream  | 10.3 / 10.4               |
+| Debian Buster   | Upstream  | 10.3 to 10.6              |
+| Debian Bullseye | Debian    | 10.5                      |
+| Debian Bullseye | Upstream  | 10.5 to 10.6              |
+
 
 Notes
 -----
@@ -18,12 +19,12 @@ Notes
 * Galera Cluster is experimental
 * Due to Vagrant + Docker limitation (private network), replication/galera can't be checked with Travis
 * If you need to test this role with Vagrant, you must install hostmanager plugin: `vagrant plugin install vagrant-hostmanager`
-* Percona Xtrabackup is not available in upstream repository. This feature is disabled in the role.
 
 Requirements
 ------------
 
-Ansible 2.5+
+- Ansible >=2.11
+- Collections: community.general / community.mysql / community.crypto / ansible.posix
 
 Role Variables
 --------------
@@ -31,8 +32,6 @@ Role Variables
 - `mariadb_use_galera`: set true to configure and install Galera Cluster
 
 ### Configuration
-
-- `mariadb_root_password`: root password (should be protected with [vault](http://docs.ansible.com/playbooks_vault.html))
 
 If you need a feature you can't configure, you can use this list. These config will go to `/etc/mysql/conf.d/01-extra`.
 
@@ -64,8 +63,10 @@ Check "priv" syntax in [mysql\_user module documentation](http://docs.ansible.co
 
 - `mariadb_version`: depends Debian version
 - `mariadb_repository`: MariaDB upstream APT repository (see: [MariaDB repositories tool](https://downloads.mariadb.org/mariadb/repositories))
-- `mariadb_percona_repository`: Percona upstream APT repository (see: [Percona APT doc](http://www.percona.com/doc/percona-server/5.5/installation/apt_repo.html))
-- `mariadb_use_percona_apt`: Force using Percona APT repository (useful when you want to use latest version of percona toolkits, xtrabackup... etc)
+
+### Other
+
+- `mariadb_debug_role`: boolean, set true to disable no_log hidding
 
 Dependencies
 ------------

@@ -1,0 +1,16 @@
+name: Tests
+on:
+  pull_request:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  Tests:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        target: [test-tox-default-py3-ansible29, test-tox-default-py3-ansible210]
+    steps:
+      - uses: actions/checkout@v2
+      - name: make ${{matrix.target}}
+        run: make ${{matrix.target}}

@@ -1,0 +1,94 @@
+#
+# {{ ansible_managed }}
+#
+
+[client]
+
+port                                = {{ mariadb_port }}
+socket                              = {{ mariadb_socket }}
+default-character-set               = {{ mariadb_charset }}
+
+
+[mysqldump]
+
+quick
+quote-names
+max-allowed-packet                  = {{ mariadb_max_allowed_packet }}
+
+
+[mysqld_safe]
+
+nice                                = 0
+skip-log-error
+syslog
+
+
+[mysqld]
+
+# GENERAL #
+user                                = mysql
+default-storage-engine              = InnoDB
+bind-address                        = {{ mariadb_bind_address }}
+port                                = {{ mariadb_port }}
+socket                              = {{ mariadb_socket }}
+pid-file                            = /var/run/mysqld/mysqld.pid
+
+# CHARSET #
+character-set-server                = {{ mariadb_charset }}
+collation-server                    = {{ mariadb_collation }}
+skip-character-set-client-handshake
+
+# MyISAM #
+key-buffer-size                     = {{ mariadb_key_buffer_size }}
+myisam-recover-options              = FORCE,BACKUP
+skip-external-locking
+
+# SAFETY #
+max-allowed-packet                  = {{ mariadb_max_allowed_packet }}
+max-connect-errors                  = 1000000
+skip-name-resolve
+# STRICT_TRANS_TABLES is disabled for now because the application is not ready for the strict tables
+sql-mode                            = ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,NO_ZERO_DATE,NO_ZERO_IN_DATE
+sysdate-is-now                      = 1
+innodb                              = FORCE
+innodb-strict-mode                  = 1
+
+# DATA STORAGE #
+basedir                             = /usr
+datadir                             = /var/lib/mysql
+tmpdir                              = /tmp
+lc-messages-dir                     = /usr/share/mysql
+
+# CACHES AND LIMITS #
+tmp-table-size                      = 32M
+max-heap-table-size                 = 32M
+query-cache-limit                   = 1M
+query-cache-type                    = 0
+query-cache-size                    = {{ mariadb_query_cache_size }}
+max-connections                     = 500
+thread-stack                        = 192K
+thread-cache-size                   = 50
+open-files-limit                    = 65535
+table-definition-cache              = 1024
+table-open-cache                    = 2048
+interactive-timeout                 = {{ mariadb_wait_timeout }}
+wait-timeout                        = {{ mariadb_wait_timeout }}
+
+# INNODB #
+innodb-flush-method                 = O_DIRECT
+innodb-log-files-in-group           = 2
+innodb-log-file-size                = {{ mariadb_innodb_log_file_size }}
+innodb-flush-log-at-trx-commit      = 1
+innodb-file-per-table               = 1
+innodb-buffer-pool-size             = {{ mariadb_innodb_buffer_pool_size }}
+
+# LOGGING #
+log-error                           = /var/log/mysql/error.log
+log-queries-not-using-indexes       = 1
+{% if mariadb_slow_query_log_enabled %}
+slow-query-log                      = 1
+slow-query-log-file                 = /var/log/mysql/slow.log
+long-query-time                     = {{ mariadb_long_query_time }}
+{% else %}
+slow-query-log                      = 0
+{% endif %}

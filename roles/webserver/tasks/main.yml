@@ -7,3 +7,4 @@
 
 - name: Import production/staging tasks
   import_tasks: "production.yml"
+  when: "'production'"

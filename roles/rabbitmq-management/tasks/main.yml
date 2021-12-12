@@ -1,0 +1,35 @@
+---
+
+- name: enable rabbitmq management
+  rabbitmq_plugin:
+    names: rabbitmq_management
+    state: enabled
+  notify:
+    - restart rabbitmq
+
+- name: remove guest user
+  rabbitmq_user:
+    user: guest
+    state: absent
+
+- name: remove default vhost
+  rabbitmq_vhost:
+    name: "/"
+    state: absent
+
+- name: add rabbitmq vhosts
+  rabbitmq_vhost:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ rabbitmq_vhosts }}"
+
+- name: add rabbitmq users
+  rabbitmq_user:
+    user: "{{ item.username }}"
+    password: "{{ item.password }}"
+    tags: "{{ item.role|default('management') }}"
+    state: present
+    permissions: "{{ item.permissions }}"
+  with_items: "{{ rabbitmq_management_users }}"
+  register: result
+  failed_when: result.failed == true and "Virtual host 'vhost' does not exist" not in result.msg

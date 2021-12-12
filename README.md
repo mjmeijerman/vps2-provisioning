@@ -1,12 +1,12 @@
-# vps2-provisioning
+# vps1-provisioning
 
 Provisioning
 ============
 
-    ansible-playbook --limit production -i hosts playbook.yml --ask-vault-pass
+    make provision-prod
 
 
 Updating galaxy roles
 =====================
 
-    ansible-galaxy install -r galaxy.yml -f
+    make update-ansible-roles

@@ -6,6 +6,17 @@
 - name: Create deploy user
   user: name={{ deploy_user }} groups=www-data shell=/bin/bash state=present password=$6$rounds=100000$Ma2q.iH0Aj6l3SAp$oYVMw4G0AOoCTiLEews.B7DEYAtg39JQg8y2dUx8zVsL22/rVK6KatHvUGrl/PYZUIghg1ic9/TkB7loCTznO1
 
+# Add group to provision user
+- name: Add supervisord group to provision user
+  user: name={{ ssh_provision_user }} groups=supervisord append=yes
+
+# Add group to deploy user
+- name: Add supervisord group to deploy user
+  user: name={{ deploy_user }} groups=supervisord append=yes
+
+- name: Create the supervisor logs folder
+  file: path=/home/logs/supervisor state=directory owner={{ deploy_user }} group={{ deploy_user }} recurse=yes
+
 - name: Add personal authorized key to deploy user
   authorized_key: user={{ deploy_user }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
 
@@ -17,3 +28,15 @@
 
 - name: write sudoers for user
   template: src={{ inventory_dir }}/roles/webserver/templates/sudoers.j2 dest=/etc/sudoers.d/{{ deploy_user }} validate='visudo -cf %s'
+
+- name: Add cron job for removing generated files doorstroming project production
+  cron:
+    name: "clean_up_generated_doorstroming_production_excel_files"
+    job: "find /home/deploy/doorstroming.jurysysteem.nl/current/var/uploadedScores/* -mtime +7 -exec rm {} \\;"
+    hour: "23"
+
+- name: Add cron job for removing generated files doorstroming project test
+  cron:
+    name: "clean_up_generated_doorstroming_test_excel_files"
+    job: "find /home/deploy/doorstroming-test.jurysysteem.nl/current/var/uploadedScores/* -mtime +7 -exec rm {} \\;"
+    hour: "23"

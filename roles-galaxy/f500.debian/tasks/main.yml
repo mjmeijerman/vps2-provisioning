@@ -8,7 +8,7 @@
   apt: pkg=curl state=present
 
 - name: install python-pycurl
-  apt: pkg=python-pycurl state=present
+  apt: pkg={{ python_package}}-pycurl state=present
 
 - name: add backports repository
   apt_repository: repo='deb http://{{ debian_repo_url }}/debian {{ debian_codename }}-backports main' state=present update_cache=no
@@ -18,6 +18,11 @@
 
 - name: install python-configparser
   apt: pkg=python-configparser state=present
+  when: "python_package == 'python'"
+
+- name: install python3-configparser
+  apt: pkg=python3-configargparse state=present
+  when: "python_package == 'python3'"
 
 - name: write inputrc
   copy: src=inputrc dest=/etc/inputrc owner=root group=root mode=0644

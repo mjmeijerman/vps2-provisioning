@@ -2,6 +2,8 @@
 
 php_composer_install_path: /usr/local/bin/composer.phar
 
+php_composer_version: ~
+
 php_composer_wrapper_enabled: yes
 php_composer_wrapper_path: /usr/local/bin/composer
 php_composer_wrapper_ini_directives:
