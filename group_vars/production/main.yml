@@ -64,9 +64,6 @@ php8_fpm_pool_pm_max_children: 128
 php8_fpm_pool_pm_max_requests: 512
 php8_fpm_pool_catch_workers_output: yes
 
-php8_extensions:
-  - memcached
-
 # MYSQL
 mariadb_bind_address:          "127.0.0.1"
 mariadb_root_password:         ~ # Placed in secure.yml

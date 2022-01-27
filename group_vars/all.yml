@@ -23,6 +23,7 @@ php8_versioned_extensions:
   - mbstring
   - amqp
   - bcmath
+  - memcached
 
 php8_fpm_pool_enabled: yes
 php8_fpm_pool_name: www
