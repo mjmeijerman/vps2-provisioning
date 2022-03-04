@@ -34,6 +34,7 @@
     src: /snap/bin/certbot
     dest: /usr/bin/certbot
     state: link
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Set Certbot script variable.
   set_fact:

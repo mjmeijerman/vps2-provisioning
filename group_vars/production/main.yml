@@ -7,14 +7,6 @@ bashrc_users:
 
 ssh_provision_user: "provision"
 
-# NGINX
-nginx_user:         www-data
-nginx_group:        www-data
-server_templates:   []
-
-nginx_http_params:
-  client_max_body_size: "8M"
-
 # UFW
 ufw_default_policy:
   - { direction: "incoming", policy: "deny" }
@@ -68,8 +60,16 @@ php8_fpm_pool_catch_workers_output: yes
 mariadb_bind_address:          "127.0.0.1"
 mariadb_root_password:         ~ # Placed in secure.yml
 
-mariadb_databases: []
-mariadb_users: []
+mariadb_databases: "{{ mariadb_databases_jurysysteem_staging }}"
+mariadb_users: "{{ mariadb_users_jurysysteem_staging }}"
+
+# NGINX
+nginx_user:         www-data
+nginx_group:        www-data
+server_templates:   "{{ nginx_server_templates_jurysysteem_staging }}"
+
+nginx_http_params:
+  client_max_body_size: "8M"
 
 #supervisord_include_files:  "/etc/supervisor/conf.d/*.conf {{ project_root }}/zh-staging.jurysysteem.nl/shared/supervisor/*.conf {{ project_root }}/zh.jurysysteem.nl/shared/supervisor/*.conf"
 
