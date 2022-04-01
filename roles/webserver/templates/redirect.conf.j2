@@ -1,0 +1,30 @@
+server {
+    listen      80;
+    server_name {{ item.domains | join(' ') }};
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+
+    location /.well-known/acme-challenge {
+        root {{ nginx_www_dir }};
+        log_not_found off;
+        try_files $uri =404;
+    }
+}
+
+server {
+    listen 443 ssl;
+
+    ssl_certificate_key     /etc/letsencrypt/live/{{ item.domains | first }}/privkey.pem;
+    ssl_certificate         /etc/letsencrypt/live/{{ item.domains | first }}/fullchain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ item.domains | first }}/chain.pem;
+    ssl_prefer_server_ciphers on;
+
+    server_name {{ item.domains | join(' ') }};
+
+    access_log {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}access.log;
+    error_log  {{ item.log_path|default('/var/log/nginx/') }}{{ item.domains | first }}-{% if item.ssl|default("on") %}ssl-{% endif %}error.log;
+
+    return 302 {{ item.redirect_to }};
+}
