@@ -11,7 +11,9 @@
   when: supervisord_log_fatal_state_to_syslog
 
 - name: Configure the supervisor fatals events listener
-  copy: src=files/supervisor.event.listeners.conf dest=/etc/supervisor/conf.d/eventlisteners.conf
+  template:
+    src: "files/supervisor.event.listeners.conf.j2"
+    dest: "/etc/supervisor/conf.d/eventlisteners.conf"
   when: supervisord_log_fatal_state_to_syslog
 
 - name: Create supervisord config
