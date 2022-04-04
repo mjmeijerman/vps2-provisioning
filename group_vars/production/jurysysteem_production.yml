@@ -1,0 +1,26 @@
+---
+
+nginx_server_templates_jurysysteem_production:
+  - name: jurysysteem_production
+    src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
+    index: index.php
+    web_root: "{{ project_root}}/www.jurysysteem.nl/current/public"
+    headers:
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline' *.fontawesome.com https://code.jquery.com https://cdn.jsdelivr.net https://stackpath.bootstrapcdn.com; style-src 'self' 'unsafe-inline' *.fontawesome.com https://cdn.jsdelivr.net https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data: *.fontawesome.com; connect-src 'self' *.fontawesome.com;"
+    domains:
+        - "www.jurysysteem.nl"
+        - "jurysysteem.nl"
+
+jurysysteem_production_db_user:     ~ # Placed in secure.yml
+jurysysteem_production_db_password: ~ # Placed in secure.yml
+
+mariadb_databases_jurysysteem_production:
+  - "jurysysteem_production"
+
+mariadb_users_jurysysteem_production:
+  - {
+    name:     "{{ jurysysteem_production_db_user }}",
+    password: "{{ jurysysteem_production_db_password }}",
+    priv:     "jurysysteem_production.*:ALL",
+    host:     "%"
+  }
