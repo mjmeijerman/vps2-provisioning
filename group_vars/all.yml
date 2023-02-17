@@ -10,7 +10,7 @@ php8_ini_directives_fpm:
   upload_max_filesize: "8M"
   post_max_size: "8M"
 
-php8_version: 8.1
+php8_version: 8.2
 php8_enable_fpm: yes
 
 php8_versioned_extensions:

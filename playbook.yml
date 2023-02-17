@@ -14,7 +14,7 @@
     - f500.ufw
     - f500.supervisord
     - f500.memcached
-    - f500.ansible_php8
+    - f500.php8
     - f500.php_composer
     - f500.vim
     - f500.debian

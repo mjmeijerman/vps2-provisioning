@@ -4,7 +4,7 @@
 - src: f500.bashrc
 - src: f500.locale
 - src: f500.nginx
-- src: f500.ansible_php8
+- src: f500.php8
 - src: f500.php_composer
 - src: f500.memcached
 - src: f500.ufw
