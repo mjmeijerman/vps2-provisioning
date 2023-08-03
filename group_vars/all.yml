@@ -86,10 +86,10 @@ certbot_auto_renew: no  # we use our own task
 certbot_auto_renew_options: "--quiet --no-self-upgrade --renew-hook 'sudo service nginx reload'"
 certbot_create_command: "{{ certbot_script }} certonly --webroot --webroot-path {{ nginx_www_dir }} --noninteractive --agree-tos --email {{ certbot_admin_email }} -d {{ item.item.domains | join(',') }}"
 
-erlang_series: 24
-rabbitmq_version: "3.9.11"
-rabbitmq_deb: "rabbitmq-server_{{ rabbitmq_version }}-1_all.deb"
-rabbitmq_deb_url: "https://github.com/rabbitmq/rabbitmq-server/releases/download/v{{ rabbitmq_version }}/{{ rabbitmq_deb }}"
+#erlang_series: 24
+#rabbitmq_version: "3.9.11"
+#rabbitmq_deb: "rabbitmq-server_{{ rabbitmq_version }}-1_all.deb"
+#rabbitmq_deb_url: "https://github.com/rabbitmq/rabbitmq-server/releases/download/v{{ rabbitmq_version }}/{{ rabbitmq_deb }}"
 
 supervisord_unix_http_server_socket_mode: "0660"
 supervisord_log_fatal_state_to_syslog: true

@@ -1,5 +1,6 @@
 server {
     listen      80;
+    listen      [::]:80;
     server_name {{ item.domains | join(' ') }};
 
     location / {
@@ -15,6 +16,7 @@ server {
 
 server {
     listen 443 ssl;
+    listen [::]:443 ssl;
 
     ssl_certificate_key     /etc/letsencrypt/live/{{ item.domains | first }}/privkey.pem;
     ssl_certificate         /etc/letsencrypt/live/{{ item.domains | first }}/fullchain.pem;

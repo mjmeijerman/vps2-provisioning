@@ -1,5 +1,6 @@
 server {
     listen      80;
+    listen      [::]:80;
     server_name {{ item.domains | join(' ') }};
 
     location / {
@@ -17,6 +18,7 @@ server {
 
 server {
     listen 443 ssl;
+    listen [::]:443 ssl;
     server_name {{ item.domains | join(' ') }};
 
     root  {{ item.web_root }};

@@ -18,9 +18,9 @@
     - f500.php_composer
     - f500.vim
     - f500.debian
-    - rockandska.erlang
-    - geerlingguy.rabbitmq
-    - rabbitmq-management
+#    - rockandska.erlang
+#    - geerlingguy.rabbitmq
+#    - rabbitmq-management
 
   tasks:
     - name: write custom mariadb conf file

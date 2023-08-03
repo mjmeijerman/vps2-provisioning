@@ -70,6 +70,7 @@ server_templates:   "{{ nginx_server_templates_jurysysteem_staging + nginx_serve
 
 nginx_http_params:
   client_max_body_size: "8M"
+  ssl_protocols: TLSv1.3
 
 #supervisord_include_files:  "/etc/supervisor/conf.d/*.conf {{ project_root }}/zh-staging.jurysysteem.nl/shared/supervisor/*.conf {{ project_root }}/zh.jurysysteem.nl/shared/supervisor/*.conf"
 
