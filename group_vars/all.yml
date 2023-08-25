@@ -38,8 +38,8 @@ php8_fpm_pool_catch_workers_output: yes
 # MYSQL
 
 mariadb_mirror_domain: 'mariadb.mirror.wearetriple.com'
-mariadb_repository: 'https://{{ mariadb_mirror_domain }}/repo/10.6/debian'
-mariadb_version: '10.6'
+mariadb_repository: 'https://{{ mariadb_mirror_domain }}/repo/11.2.1/debian'
+mariadb_upstream_version: '11.2.1'
 mariadb_config_template: "{{ inventory_dir }}/roles/webserver/templates/my.cnf.j2"
 mariadb_max_allowed_packet:      "64M"
 mariadb_innodb_buffer_pool_size: 592M

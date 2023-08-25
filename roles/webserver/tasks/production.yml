@@ -3,6 +3,17 @@
 - name: Add github.com to known_hosts file
   lineinfile: dest=/etc/ssh/ssh_known_hosts line="{{ lookup('pipe', 'ssh-keyscan github.com') }}" state=present  create=yes mode=0644
 
+- name: Install fail2ban
+  apt:
+    name: "fail2ban"
+    state: present
+
+- name: Set fail2ban to work with UFW
+  template:
+    src: "fail2ban/jail.local.j2"
+    dest: "/etc/fail2ban/jail.local"
+  notify: restart fail2ban
+
 - name: Create deploy user
   user: name={{ deploy_user }} groups=www-data shell=/bin/bash state=present password=$6$rounds=100000$Ma2q.iH0Aj6l3SAp$oYVMw4G0AOoCTiLEews.B7DEYAtg39JQg8y2dUx8zVsL22/rVK6KatHvUGrl/PYZUIghg1ic9/TkB7loCTznO1
 
@@ -28,15 +39,3 @@
 
 - name: write sudoers for user
   template: src={{ inventory_dir }}/roles/webserver/templates/sudoers.j2 dest=/etc/sudoers.d/{{ deploy_user }} validate='visudo -cf %s'
-
-- name: Add cron job for removing generated files doorstroming project production
-  cron:
-    name: "clean_up_generated_doorstroming_production_excel_files"
-    job: "find /home/deploy/doorstroming.jurysysteem.nl/current/var/uploadedScores/* -mtime +7 -exec rm {} \\;"
-    hour: "23"
-
-- name: Add cron job for removing generated files doorstroming project test
-  cron:
-    name: "clean_up_generated_doorstroming_test_excel_files"
-    job: "find /home/deploy/doorstroming-test.jurysysteem.nl/current/var/uploadedScores/* -mtime +7 -exec rm {} \\;"
-    hour: "23"

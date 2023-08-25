@@ -2,5 +2,5 @@
 
 - name: Install apt packages
   apt:
-    name: ['acl', 'git', 'unzip', 'build-essential', 'gcc', 'make']
+    name: ['acl', 'git', 'unzip', 'build-essential', 'gcc', 'make', 'gpg-agent']
     state: present
