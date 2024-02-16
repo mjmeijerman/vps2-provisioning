@@ -11,8 +11,10 @@
     state: present
 
 - name: Add the deb.sury.org trusted key
-  apt_key:
-    id: 95BD4743
+  ansible.builtin.get_url:
+    dest: /etc/apt/trusted.gpg.d/php.gpg
+    mode: 0644
+    force: yes
     url: https://packages.sury.org/php/apt.gpg
 
 - name: Add the deb.sury.org repository

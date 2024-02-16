@@ -14,7 +14,7 @@ It also runs apt-get update when it was run, last time, more than `{{ debian_cac
 Requirements
 ------------
 
-Debian Wheezy/Jessie/Stretch/Buster/Bullseye.
+Debian Bullseye/Bookworm.
 
 Role Variables
 --------------

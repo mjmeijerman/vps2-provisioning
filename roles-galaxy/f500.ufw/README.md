@@ -6,7 +6,7 @@ Install UWF (Uncomplicated Firewall) and create (or remove) rules.
 Requirements
 ------------
 
-Debian Wheezy/Jessie/Stretch/Buster with the package python-pycurl and python-software-properties installed.
+Debian Bullseye / Bookworm with the package python-pycurl and python-software-properties installed.
 
 Role Variables
 --------------

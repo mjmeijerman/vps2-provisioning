@@ -6,11 +6,11 @@ galaxy_info:
   description: Install PHP version 8.X from deb.sury.org
   company: Future500
   license: LGPL-3.0
-  min_ansible_version: 2.0
+  min_ansible_version: "2.0"
   platforms:
   - name: Debian
     versions:
-      - buster
       - bullseye
+      - bookworm
   galaxy_tags:
     - web

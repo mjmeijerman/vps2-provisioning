@@ -6,7 +6,7 @@ Install PHP version 8.X from [deb.sury.org](https://deb.sury.org/).
 Requirements
 ------------
 
-This role is tailored towards Debian Jessie / Wheezy / Stretch / Buster.
+This role is tailored towards Debian Bullseye / Bookworm.
 
 The packages `python-apt` (or `python3-apt`) must be installed.
 
