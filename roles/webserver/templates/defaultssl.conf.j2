@@ -43,7 +43,7 @@ server {
 }
 
 server {
-    listen      80;
+    listen      80 default_server;
     listen      [::]:80 default_server;
     server_name _;
     root        {{ nginx_www_dir }};
