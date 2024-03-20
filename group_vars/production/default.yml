@@ -1,0 +1,7 @@
+---
+
+nginx_server_templates_default:
+  - name: defaultssl
+    domains:
+      - vps2.markmeijerman.nl
+    src: "{{ inventory_dir }}/roles/webserver/templates/defaultssl.conf.j2"

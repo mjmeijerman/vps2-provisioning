@@ -1,0 +1,69 @@
+server {
+    listen      443 default_server ssl;
+    listen      [::]:443 default_server ssl;
+    server_name _;
+    root        {{ nginx_www_dir }};
+
+    access_log    /var/log/nginx/default.access.log  main;
+    error_log     /var/log/nginx/default.error.log   warn;
+    log_not_found off;
+
+    ssl_certificate_key     /etc/letsencrypt/live/{{ item.domains | first }}/privkey.pem;
+    ssl_certificate         /etc/letsencrypt/live/{{ item.domains | first }}/fullchain.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ item.domains | first }}/chain.pem;
+
+    {% if item.rabbitmq_enabled|default(false) %}
+        location ~* /rabbitmq/api/(.*?)/(.*) {
+            {% if item.rabbitmq_whitelist_ip|default(false) -%}
+                {%- for ip in item.rabbitmq_whitelist_ip -%}
+                    allow {{ ip }};
+                {% endfor -%}
+                deny all;
+            {% endif %}
+
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:" always;
+
+            proxy_pass http://127.0.0.1:15672/api/$1/$2?$query_string;
+        }
+
+        location ~* /rabbitmq/(.*) {
+            {% if item.rabbitmq_whitelist_ip|default(false) -%}
+                {%- for ip in item.rabbitmq_whitelist_ip -%}
+                    allow {{ ip }};
+                {% endfor -%}
+                deny all;
+            {% endif %}
+
+            add_header Content-Security-Policy "default-src 'self'; script-src 'self' data: 'unsafe-inline' 'unsafe-eval'; style-src 'self' data: 'unsafe-inline'; img-src 'self' data:" always;
+
+            rewrite ^/rabbitmq/(.*)$ /$1 break;
+            proxy_pass http://127.0.0.1:15672;
+        }
+    {% endif %}
+}
+
+server {
+    listen      80;
+    listen      [::]:80 default_server;
+    server_name _;
+    root        {{ nginx_www_dir }};
+
+    access_log    /var/log/nginx/default.access.log  main;
+    error_log     /var/log/nginx/default.error.log   warn;
+    log_not_found off;
+}
+
+server {
+  listen 81;
+  server_name localhost;
+
+  access_log off;
+  allow 127.0.0.1;
+  deny all;
+
+  server_tokens on;
+
+  location /nginx_status {
+    stub_status;
+  }
+}
