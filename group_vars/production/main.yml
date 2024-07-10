@@ -66,6 +66,7 @@ mariadb_users: "{{ mariadb_users_jurysysteem_staging + mariadb_users_jurysysteem
 # NGINX
 nginx_user:         www-data
 nginx_group:        www-data
+nginx_set_default_server: false
 server_templates:   "{{ nginx_server_templates_jurysysteem_staging + nginx_server_templates_jurysysteem_donar + nginx_server_templates_jurysysteem_craft + nginx_server_templates_jurysysteem_production + nginx_server_templates_default }}"
 
 nginx_http_params:
