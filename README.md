@@ -1,4 +1,4 @@
-# vps1-provisioning
+# vps2-provisioning
 
 Provisioning
 ============

@@ -1,5 +1,5 @@
 ---
-- name: Provision vps1.markmeijerman.nl
+- name: Provision vps2.markmeijerman.nl
   hosts: all
   remote_user: "{{ ssh_provision_user }}"
   become: yes
