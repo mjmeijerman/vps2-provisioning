@@ -60,14 +60,14 @@ php8_fpm_pool_catch_workers_output: yes
 mariadb_bind_address:          "127.0.0.1"
 mariadb_root_password:         ~ # Placed in secure.yml
 
-mariadb_databases: "{{ mariadb_databases_jurysysteem_staging + mariadb_databases_jurysysteem_donar + mariadb_databases_jurysysteem_craft + mariadb_databases_jurysysteem_production }}"
-mariadb_users: "{{ mariadb_users_jurysysteem_staging + mariadb_users_jurysysteem_donar + mariadb_users_jurysysteem_craft + mariadb_users_jurysysteem_production }}"
+mariadb_databases: "{{ mariadb_databases_jurysysteem_staging + mariadb_databases_jurysysteem_donar + mariadb_databases_jurysysteem_craft + mariadb_databases_jurysysteem_production + mariadb_databases_ltc_zelhem }}"
+mariadb_users: "{{ mariadb_users_jurysysteem_staging + mariadb_users_jurysysteem_donar + mariadb_users_jurysysteem_craft + mariadb_users_jurysysteem_production + mariadb_users_ltc_zelhem }}"
 
 # NGINX
 nginx_user:         www-data
 nginx_group:        www-data
 nginx_set_default_server: false
-server_templates:   "{{ nginx_server_templates_jurysysteem_staging + nginx_server_templates_jurysysteem_donar + nginx_server_templates_jurysysteem_craft + nginx_server_templates_jurysysteem_production + nginx_server_templates_default }}"
+server_templates:   "{{ nginx_server_templates_jurysysteem_staging + nginx_server_templates_jurysysteem_donar + nginx_server_templates_jurysysteem_craft + nginx_server_templates_jurysysteem_production + nginx_server_templates_default + nginx_server_templates_ltc_zelhem }}"
 
 nginx_http_params:
   client_max_body_size: "8M"

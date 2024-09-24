@@ -1,0 +1,25 @@
+---
+
+nginx_server_templates_ltc_zelhem:
+  - name: ltz_zelhem
+    src: "{{ inventory_dir }}/roles/webserver/templates/https.conf.j2"
+    index: index.php
+    web_root: "{{ project_root}}/ltczelhem.markmeijerman.nl/current/public"
+    headers:
+        Content-Security-Policy: "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self';"
+    domains:
+        - "ltczelhem.markmeijerman.nl"
+
+ltc_zelhem_db_user:     ~ # Placed in secure.yml
+ltc_zelhem_db_password: ~ # Placed in secure.yml
+
+mariadb_databases_ltc_zelhem:
+  - ltc_zelhem
+
+mariadb_users_ltc_zelhem:
+  - {
+    name:     "{{ ltc_zelhem_db_user }}",
+    password: "{{ ltc_zelhem_db_password }}",
+    priv:     "ltc_zelhem.*:ALL",
+    host:     "%"
+  }
