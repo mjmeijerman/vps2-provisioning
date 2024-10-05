@@ -10,6 +10,7 @@
     - f500.bashrc
     - HanXHX.mysql
     - f500.nginx
+    - f500.nodejs
     - f500.locale
     - f500.ufw
     - f500.supervisord

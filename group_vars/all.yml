@@ -4,6 +4,10 @@
 
 python_package: 'python3'
 
+# NODEJS
+
+nodejs_version: 20.x
+
 # PHP
 
 php8_ini_directives_fpm:

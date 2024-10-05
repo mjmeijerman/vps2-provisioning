@@ -12,5 +12,6 @@
 - src: f500.supervisord
 - src: HanXHX.mysql
 - src: geerlingguy.certbot
+- src: f500.nodejs
 #- src: geerlingguy.rabbitmq
 #- src: rockandska.erlang
