@@ -6,7 +6,7 @@ nginx_server_templates_ltc_zelhem:
     index: index.php
     web_root: "{{ project_root}}/ltczelhem.markmeijerman.nl/current/public"
     headers:
-        Content-Security-Policy: "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self';"
+        Content-Security-Policy: "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self';"
     domains:
         - "ltczelhem.markmeijerman.nl"
 
